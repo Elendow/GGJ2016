@@ -117,7 +117,6 @@ namespace Light2D
         private Material _normalMappedLightMaterial;
         private Material _lightCombiningMaterial;
         private Material _alphaBlendedMaterial;
-        private bool _halfTexelOffest;
 #if LIGHT2D_2DTK
         private tk2dCamera _tk2dCamera;
 #endif
@@ -182,8 +181,6 @@ namespace Light2D
             _texFormat = HDR ? RenderTextureFormat.ARGBHalf : RenderTextureFormat.ARGB32;
 
             var lightPixelsPerUnityMeter = LightPixelsPerUnityMeter;
-
-            _halfTexelOffest = SystemInfo.graphicsDeviceVersion.StartsWith("Direct3D 9");
 
             InitTK2D();
 
