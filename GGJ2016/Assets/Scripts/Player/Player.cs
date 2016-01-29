@@ -5,6 +5,7 @@ using InControl;
 public class Player : MonoBehaviour {
 
 	public float speed = 5;
+	public int playerNum;
 
 	private Rigidbody2D _rigidbody;
 	private PlayerInput playerInput;
@@ -12,11 +13,14 @@ public class Player : MonoBehaviour {
 	void Awake() 
 	{
 		_rigidbody 	= GetComponent<Rigidbody2D>();
-		playerInput = new PlayerInput();
+		playerInput = new PlayerInput(GameManager.Instance.playerDevices[playerNum - 1]);
+
+		Debug.Log(playerNum + " " + GameManager.Instance.playerDevices[playerNum - 1].Name);
 	}
 	
 	void Update() 
 	{
+		Debug.Log(InputManager.ActiveDevice.Name);
 		_rigidbody.velocity = new Vector2(playerInput.move.X * speed, playerInput.move.Y * speed);
 	}
 }
@@ -29,8 +33,9 @@ public class PlayerInput : PlayerActionSet
 	private PlayerAction _left, _right, _up, _down;
 	private PlayerAction _shootLeft, _shootRight, _shootUp, _shootDown;
 
-	public PlayerInput()
+	public PlayerInput(InputDevice device)
 	{
+		Device 		= device;
 		_left 		= CreatePlayerAction("Move Left");
 		_right 		= CreatePlayerAction("Move Right");
 		_up 		= CreatePlayerAction("Move Up");
@@ -42,8 +47,6 @@ public class PlayerInput : PlayerActionSet
 		_shootUp 	= CreatePlayerAction("Shoot Up");
 		_shootDown 	= CreatePlayerAction("Shoot Down");
 		shoot		= CreateTwoAxisPlayerAction(_shootLeft, _shootRight, _shootDown, _shootUp);
-
-		//TODO Load values from SaveFile
 
 		//Keyboard
 		_left.AddDefaultBinding(Key.LeftArrow);
