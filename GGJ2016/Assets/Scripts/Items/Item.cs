@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class Item : MonoBehaviour 
 {
@@ -19,8 +20,8 @@ public class Item : MonoBehaviour
 
 	public void Update()
 	{
-		if(Mathf.Abs(_rigidbody.velocity.x) < 0.2f || Mathf.Abs(_rigidbody.velocity.y) < 0.2f)
-			_isThrown = true;
+		if(Mathf.Abs(_rigidbody.velocity.x) < 0.1f || Mathf.Abs(_rigidbody.velocity.y) < 0.1f)
+			_isThrown = false;
 	}
 
 	public void PickUp(Transform parent)
@@ -34,7 +35,6 @@ public class Item : MonoBehaviour
 	public void Throw(float angle, float force)
 	{
 		Vector2 forward;
-		float angleMagnitud;
 		_isThrown 				= true;
 		_angle 					= angle;
 		forward 				= new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle));
@@ -44,6 +44,22 @@ public class Item : MonoBehaviour
 		_rigidbody.AddForce(forward * force);
 
 		Debug.Log(itemName + " is thrown. Angle " + angle);
+	}
+
+	private void OnTriggerStay2D(Collider2D other)
+	{
+		if(other.gameObject.CompareTag("Lava"))
+		{
+			if(!_isThrown)
+			{
+				transform.DOScale(Vector3.zero, 0.5f);
+				transform.DORotate(new Vector3(0,0,200), 0.5f);
+
+				_rigidbody.velocity *= 0.5f;
+				_collider.enabled 	= false;
+				Destroy(gameObject, 1f);
+			}
+		}
 	}
 
 	public bool IsThrown

@@ -67,12 +67,12 @@ public class Player : MonoBehaviour {
 				//Right Joystick Logic
 				if(_playerInput.shoot.IsPressed)
 				{
-					float _angle = Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X);
+					float angle = Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X);
 
 					//Throw Item
 					if(_item != null)
 					{
-						_item.Throw(_angle, throwForce);
+						_item.Throw(angle, throwForce);
 						_lastItem 	= _item;
 						_item 		= null;
 						itemPosition.SetActive(false);
@@ -80,8 +80,20 @@ public class Player : MonoBehaviour {
 					//Push Player
 					else
 					{
-						Ray2D ray = new Ray2D(transform.position, new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle) * pushDistance));
-						Debug.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(_angle), Mathf.Sin(_angle) * pushDistance, 0)); 
+						#if UNITY_EDITOR
+						Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
+						#endif
+						RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
+						if (hit.collider != null) {
+							if(hit.collider.gameObject.CompareTag("Player"))
+							{
+								float distance = Vector2.Distance(transform.position, hit.point);
+								if(distance <= pushDistance)
+								{
+									hit.collider.gameObject.GetComponent<Player>().Push(distance, angle);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -128,6 +140,16 @@ public class Player : MonoBehaviour {
 		_lastItem 			= null;
 		_item 				= null;
 
+	}
+
+	public void Push(float distance, float angle)
+	{
+		if(_item != null)
+			_item.Throw(angle, throwForce);
+
+		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+
+		_rigidbody.AddForce(forward * (throwForce * 0.5f));
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
