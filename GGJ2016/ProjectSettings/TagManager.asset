@@ -46,3 +46,27 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Suelo
+    uniqueID: 4005167373
+    locked: 0
+  - name: Lava
+    uniqueID: 1179734815
+    locked: 0
+  - name: BordeLava
+    uniqueID: 3913965731
+    locked: 0
+  - name: AlfombraItems
+    uniqueID: 101366465
+    locked: 0
+  - name: Paredes
+    uniqueID: 2915691351
+    locked: 0
+  - name: ItemsEnTotems
+    uniqueID: 3599546013
+    locked: 0
+  - name: Items
+    uniqueID: 1605706033
+    locked: 0
+  - name: Totem
+    uniqueID: 2363908377
+    locked: 0
