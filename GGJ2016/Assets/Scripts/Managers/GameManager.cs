@@ -19,8 +19,12 @@ public class GameManager
 
 	public List<int> playerDevices;
 
+	public bool isInGame = false;
+
 	public GameManager()
 	{
 		playerDevices = new List<int>();
 	}
+
+
 }

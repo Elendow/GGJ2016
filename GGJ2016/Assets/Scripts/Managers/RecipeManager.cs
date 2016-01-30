@@ -5,9 +5,16 @@ public class RecipeManager : MonoBehaviour {
 
 	public List<Item> allItems;
 	public List<Recipe> recipes;
+	public List<Spawner> spawners;
+
+	public AnimationCurve balanceTiempoEspera;
+
+	private float timeStarted;
 
 	private void Awake() 
 	{
+
+		spawners = new List<Spawner>(FindObjectsOfType<Spawner> ());
 		recipes = new List<Recipe>();
 		for(int i = 0; i < 4; i++)
 			recipes.Add(new Recipe());
@@ -16,6 +23,12 @@ public class RecipeManager : MonoBehaviour {
 			recipes[i].Initialize();
 		
 		OrganizeRecipes();
+
+		//Comentar esto para activarlo cuando vengamos del menu
+		GameManager.Instance.isInGame = true;
+		timeStarted = Time.time;
+		StartCoroutine(RoutineSpawn());
+
 	}
 
 	//Cada item lo tengan 3 de los personajes. a excepción del último asignado que lo asignaremos únicamente
@@ -64,5 +77,45 @@ public class RecipeManager : MonoBehaviour {
 			list[n] = value;
 		}
 		return list;
+	}
+
+
+	public void SpawnItems(){
+		List<Spawner> spawnerLibres = spawners.FindAll(s => s.itsFree);
+		if (spawnerLibres.Count > 0) {
+			InstanciateItemInSpawner (allItems [Random.Range (0, allItems.Count)], spawnerLibres [Random.Range (0, spawnerLibres.Count)]);
+		}
+	}
+
+	public void SpawnItemsInitial(){
+		//Coge los iniciales
+		List<Spawner> spawnerIniciales = spawners.FindAll(s => s.initialSpawner);
+		foreach (Spawner spawner in spawnerIniciales) {
+			InstanciateItemInSpawner (allItems [Random.Range (0, allItems.Count)], spawner);
+		}
+	}
+
+	private void InstanciateItemInSpawner(Item item, Spawner spawner){
+		GameObject instantiatedItem = GameObject.Instantiate (item.gameObject);
+		instantiatedItem.transform.position = spawner.transform.position;
+		spawner.itsFree = false;
+
+	}
+
+
+
+	IEnumerator RoutineSpawn(){
+
+
+
+		SpawnItemsInitial ();
+		yield return new WaitForSeconds (balanceTiempoEspera.Evaluate(Time.time - timeStarted));
+
+		while (GameManager.Instance.isInGame) {
+			SpawnItems ();
+
+			yield return new WaitForSeconds (balanceTiempoEspera.Evaluate(Time.time - timeStarted));
+				
+		}
 	}
 }
