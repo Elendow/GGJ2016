@@ -8,49 +8,37 @@ public class MainMenuManager : MonoBehaviour {
 	public GameObject[] playerTick;
 	public int maxPlayer = 2;
 
-	int index = 0;
-	PlayerInputSelector playerInputSel;
+	private InputDevice[] controllers;
+
+	private int index = 0;
 
 	private void Start()
 	{
-		playerInputSel 	= new PlayerInputSelector();
+		controllers = new InputDevice[4];
+		for(int i = 0; i < InputManager.Devices.Count; i++)
+		{
+			if(InputManager.Devices[i].IsAttached)
+			{
+				Debug.Log("Player " + (i+1) + " uses " + InputManager.Devices[i].Name);
+				controllers[i] = InputManager.Devices[i];	
+				GameManager.Instance.playerDevices.Add(i);
+			}
+		}
 	}
 
 	private void Update()
 	{
-		if(index < maxPlayer)
+		for(int i = 0; i < controllers.Length; i++)
 		{
-			if(playerInputSel.accept.IsPressed && !GameManager.Instance.playerDevices.Contains(playerInputSel.Device))
+			if(controllers[i] != null)
 			{
-				GameManager.Instance.playerDevices.Add(playerInputSel.Device);
-				playerTick[index].SetActive(true);
-				index++;
+				if(controllers[i].Action1.IsPressed)
+					playerTick[i].SetActive(true);
+				else if(controllers[i].Action2.IsPressed)
+					playerTick[i].SetActive(false);
+				else if(controllers[i].Action4.IsPressed)
+					SceneManager.LoadScene("Gameplay");
 			}
 		}
-		else
-		{
-			if(playerInputSel.accept)
-				SceneManager.LoadScene("Gameplay");
-
-			if(index >= 0 && playerInputSel.cancel.IsPressed)
-			{
-				index--;
-				playerTick[index].SetActive(true);
-			}
-		}
-	}
-}
-
-public class PlayerInputSelector : PlayerActionSet
-{
-	public PlayerAction accept, cancel;
-
-	public PlayerInputSelector()
-	{
-		accept = CreatePlayerAction("Accept");
-		cancel = CreatePlayerAction("Cancel");
-
-		accept.AddDefaultBinding(InputControlType.Action1);
-		cancel.AddDefaultBinding(InputControlType.Action2);
 	}
 }

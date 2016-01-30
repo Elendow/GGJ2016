@@ -17,10 +17,10 @@ public class GameManager
 	}
 	#endregion
 
-	public List<InputDevice> playerDevices;
+	public List<int> playerDevices;
 
 	public GameManager()
 	{
-		playerDevices = new List<InputDevice>();
+		playerDevices = new List<int>();
 	}
 }

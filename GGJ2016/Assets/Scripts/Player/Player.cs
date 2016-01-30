@@ -7,21 +7,66 @@ public class Player : MonoBehaviour {
 	public float speed = 5;
 	public int playerNum;
 
+	private float _repickDelay = 1.5f;
+	private Item _item;
+	private Item _lastItem;
 	private Rigidbody2D _rigidbody;
-	private PlayerInput playerInput;
+	private PlayerInput _playerInput;
 
 	void Awake() 
 	{
-		_rigidbody 	= GetComponent<Rigidbody2D>();
-		playerInput = new PlayerInput(GameManager.Instance.playerDevices[playerNum - 1]);
+		_rigidbody 		= GetComponent<Rigidbody2D>();
+		_playerInput 	= new PlayerInput();
 
-		Debug.Log(playerNum + " " + GameManager.Instance.playerDevices[playerNum - 1].Name);
+		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
+		{
+			_playerInput.Device = InputManager.Devices[GameManager.Instance.playerDevices[playerNum - 1]];
+			Debug.Log(playerNum + " " + _playerInput.Device.Name);
+		}
+		else
+		{
+			//SOLO PARA TESTEO!
+			_playerInput.Device = InputManager.Devices[playerNum - 1];
+			Debug.LogWarning("No input for player " + playerNum);
+		}
 	}
 	
 	void Update() 
 	{
-		Debug.Log(InputManager.ActiveDevice.Name);
-		_rigidbody.velocity = new Vector2(playerInput.move.X * speed, playerInput.move.Y * speed);
+		if(_playerInput != null)
+		{
+			_rigidbody.velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed);
+
+			if(_item != null)
+			{
+				if(_playerInput.shoot.IsPressed)
+				{
+					_item.Throw(Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X) * Mathf.Rad2Deg);
+					_lastItem 	= _item;
+					_item 		= null;
+				}
+			}
+		}
+
+		if(_lastItem != null)
+		{
+			_repickDelay -= Time.deltaTime;
+			if(_repickDelay < 0)
+			{
+				_repickDelay 	= 1.5f;
+				_lastItem 		= null;
+			}
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if(other.gameObject.CompareTag("Item"))
+		{
+			_item = other.GetComponent<Item>();
+			if(_lastItem != _item)
+				_item.PickUp(transform);
+		}
 	}
 }
 
@@ -33,9 +78,8 @@ public class PlayerInput : PlayerActionSet
 	private PlayerAction _left, _right, _up, _down;
 	private PlayerAction _shootLeft, _shootRight, _shootUp, _shootDown;
 
-	public PlayerInput(InputDevice device)
+	public PlayerInput()
 	{
-		Device 		= device;
 		_left 		= CreatePlayerAction("Move Left");
 		_right 		= CreatePlayerAction("Move Right");
 		_up 		= CreatePlayerAction("Move Up");
@@ -47,6 +91,8 @@ public class PlayerInput : PlayerActionSet
 		_shootUp 	= CreatePlayerAction("Shoot Up");
 		_shootDown 	= CreatePlayerAction("Shoot Down");
 		shoot		= CreateTwoAxisPlayerAction(_shootLeft, _shootRight, _shootDown, _shootUp);
+
+		shoot.LowerDeadZone = 0.5f;
 
 		//Keyboard
 		_left.AddDefaultBinding(Key.LeftArrow);
