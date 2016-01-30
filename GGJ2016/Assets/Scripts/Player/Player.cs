@@ -27,7 +27,10 @@ public class Player : MonoBehaviour {
 		else
 		{
 			//Test only
-			_playerInput.Device = InputManager.Devices[playerNum - 1];
+			if(InputManager.Devices.Count > playerNum - 1)
+			{
+				_playerInput.Device = InputManager.Devices[playerNum - 1];
+			}
 			Debug.LogWarning("No input for player " + playerNum);
 		}
 	}
