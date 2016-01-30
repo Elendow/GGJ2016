@@ -42,7 +42,7 @@ public class Item : MonoBehaviour
 		transform.parent  		= null;
 		_collider.enabled 		= true;
 		_rigidbody.isKinematic 	= false;
-		_rigidbody.AddForce(forward * 50);
+		_rigidbody.AddForce(forward * 100);
 
 		Debug.Log(itemName + " is thrown. Angle " + angle);
 	}

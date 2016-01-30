@@ -37,6 +37,7 @@ public class Totem : MonoBehaviour {
 
 				_recipe.itemsDone[index] = 1;
 				ingredientsIcon[index].color = Color.green;
+				other.gameObject.SetActive(false);
 			}
 			else
 			{
@@ -50,6 +51,7 @@ public class Totem : MonoBehaviour {
 				int _screwItem = _missingItems[Random.Range(0, _missingItems.Count)];
 				_recipe.itemsDone[_screwItem] = -1;
 				ingredientsIcon[_screwItem].color = Color.red;
+				other.gameObject.SetActive(false);
 			}
 		}
 	}

@@ -7,7 +7,8 @@ public class Recipe {
 	public List<int> itemsRecipe;
 	public List<int> itemsDone; //-1 bad, 0 none, 1 good
 
-	private void Start(){
+	public void Initialize()
+	{
 		itemsRecipe = new List<int>();
 		itemsDone = new List<int>();
 	}

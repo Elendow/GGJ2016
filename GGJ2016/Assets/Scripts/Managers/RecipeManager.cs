@@ -8,7 +8,13 @@ public class RecipeManager : MonoBehaviour {
 
 	private void Awake() 
 	{
-		recipes = new List<Recipe>(GetComponentsInChildren<Recipe> ());
+		recipes = new List<Recipe>();
+		for(int i = 0; i < 4; i++)
+			recipes.Add(new Recipe());
+
+		for(int i = 0; i < 4; i++)
+			recipes[i].Initialize();
+		
 		OrganizeRecipes();
 	}
 
