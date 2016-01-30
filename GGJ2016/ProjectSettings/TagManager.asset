@@ -52,6 +52,9 @@ TagManager:
   - name: BordeLava
     uniqueID: 3913965731
     locked: 0
+  - name: AlfombraSuelo
+    uniqueID: 2504739417
+    locked: 0
   - name: AlfombraItems
     uniqueID: 101366465
     locked: 0
