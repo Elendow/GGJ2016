@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Item : MonoBehaviour {
-
+public class Item : MonoBehaviour 
+{
+	public string itemName;
 	private Rigidbody2D _rigidbody;
 	private Collider2D _collider;
 
@@ -24,14 +25,11 @@ public class Item : MonoBehaviour {
 		Vector2 forward;
 		float angleMagnitud;
 
-		transform.Rotate(new Vector3(0,0,angle));
-
-		angleMagnitud 			= transform.eulerAngles.magnitude * Mathf.Deg2Rad;
+		angleMagnitud 			= angle * Mathf.Deg2Rad;
 		forward 				= new Vector2(Mathf.Cos(angleMagnitud), Mathf.Sin(angleMagnitud));
 		transform.parent  		= null;
 		_collider.enabled 		= true;
 		_rigidbody.isKinematic 	= false;
-
 		_rigidbody.AddForce(forward * 50);
 	}
 }

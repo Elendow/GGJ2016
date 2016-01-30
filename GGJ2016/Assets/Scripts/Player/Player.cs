@@ -20,12 +20,13 @@ public class Player : MonoBehaviour {
 
 		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
+			//Take the controller assigned on the menu
 			_playerInput.Device = InputManager.Devices[GameManager.Instance.playerDevices[playerNum - 1]];
 			Debug.Log(playerNum + " " + _playerInput.Device.Name);
 		}
 		else
 		{
-			//SOLO PARA TESTEO!
+			//Test only
 			_playerInput.Device = InputManager.Devices[playerNum - 1];
 			Debug.LogWarning("No input for player " + playerNum);
 		}
@@ -35,8 +36,10 @@ public class Player : MonoBehaviour {
 	{
 		if(_playerInput != null)
 		{
+			//Movement
 			_rigidbody.velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed);
 
+			//Throw item logic
 			if(_item != null)
 			{
 				if(_playerInput.shoot.IsPressed)
@@ -48,6 +51,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 
+		//Delay applied in order to not re-pick up an item too fast
 		if(_lastItem != null)
 		{
 			_repickDelay -= Time.deltaTime;
@@ -61,6 +65,7 @@ public class Player : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		//Pick up an item
 		if(other.gameObject.CompareTag("Item"))
 		{
 			_item = other.GetComponent<Item>();
@@ -70,6 +75,7 @@ public class Player : MonoBehaviour {
 	}
 }
 
+//Incontrol player action set class
 public class PlayerInput : PlayerActionSet
 { 
 	public PlayerTwoAxisAction move;
@@ -91,10 +97,10 @@ public class PlayerInput : PlayerActionSet
 		_shootUp 	= CreatePlayerAction("Shoot Up");
 		_shootDown 	= CreatePlayerAction("Shoot Down");
 		shoot		= CreateTwoAxisPlayerAction(_shootLeft, _shootRight, _shootDown, _shootUp);
+		shoot.LowerDeadZone = 1;
+		shoot.UpperDeadZone = 1;
 
-		shoot.LowerDeadZone = 0.5f;
-
-		//Keyboard
+		//Keyboard (ignored if gamepad is assigned)
 		_left.AddDefaultBinding(Key.LeftArrow);
 		_right.AddDefaultBinding(Key.RightArrow);
 		_up.AddDefaultBinding(Key.UpArrow);
