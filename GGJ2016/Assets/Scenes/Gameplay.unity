@@ -353,11 +353,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 4
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.z
@@ -563,11 +563,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -4
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -6.5
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.z
@@ -702,7 +702,6 @@ GameObject:
   - 81: {fileID: 603457498}
   - 114: {fileID: 603457497}
   - 114: {fileID: 603457496}
-  - 114: {fileID: 603457495}
   - 114: {fileID: 603457501}
   m_Layer: 0
   m_Name: Main Camera
@@ -711,26 +710,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &603457495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 603457494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17577239430844efcbdda516df8c1f8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ProCamera2D: {fileID: 603457497}
-  PixelsPerUnit: 20
-  ViewportAutoScale: 1
-  TargetViewportSizeInPixels: {x: 2048, y: 1152}
-  Zoom: 1
-  SnapMovementToGrid: 0
-  DrawGrid: 0
-  GridColor: {r: 1, g: 0, b: 0, a: 0.1}
-  GridDensity: 0.99999994
 --- !u!114 &603457496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,7 +782,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0.019607844}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -814,7 +793,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.75
+  orthographic size: 9.708333
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -852,7 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d9b6871d3cdbba478825c4b041a7f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LightPixelSize: 0.30921054
+  LightPixelSize: 0.30407125
   LightCameraSizeAdd: 3
   LightCameraFovAdd: 30
   EnableAmbientLight: 1
@@ -932,6 +911,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 176066, guid: b2bf6af2df39c4cb2a2e29be2f589929, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2bf6af2df39c4cb2a2e29be2f589929, type: 2}
   m_IsPrefabParent: 0
@@ -988,7 +971,7 @@ Camera:
   far clip plane: 1000
   field of view: 90
   orthographic: 1
-  orthographic size: 11.75
+  orthographic size: 12.708333
   m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
@@ -1091,6 +1074,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 179970, guid: ca8dc01e9db8849f083b9e401079d948, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ca8dc01e9db8849f083b9e401079d948, type: 2}
   m_IsPrefabParent: 0
@@ -1187,11 +1174,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -4
+      value: -6.5
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1650,11 +1637,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 405190, guid: 05375b0a881fc4bd1aa4aa813132ef7a, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2206,6 +2193,22 @@ Prefab:
     - target: {fileID: 21237486, guid: 62365d6c0ac085d4c9e222c5ed688647, type: 2}
       propertyPath: m_SortingLayerID
       value: -1379275945
+      objectReference: {fileID: 0}
+    - target: {fileID: 491950, guid: 62365d6c0ac085d4c9e222c5ed688647, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 17.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 491950, guid: 62365d6c0ac085d4c9e222c5ed688647, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 483900, guid: 62365d6c0ac085d4c9e222c5ed688647, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 475908, guid: 62365d6c0ac085d4c9e222c5ed688647, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 17.75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 62365d6c0ac085d4c9e222c5ed688647, type: 2}
