@@ -20,7 +20,7 @@ public class Item : MonoBehaviour
 
 	public void Update()
 	{
-		if(Mathf.Abs(_rigidbody.velocity.x) < 0.1f || Mathf.Abs(_rigidbody.velocity.y) < 0.1f)
+		if(Mathf.Abs(_rigidbody.velocity.x) < 0.1f && Mathf.Abs(_rigidbody.velocity.y) < 0.1f)
 			_isThrown = false;
 	}
 
@@ -54,7 +54,8 @@ public class Item : MonoBehaviour
 			{
 				transform.DOScale(Vector3.zero, 0.5f);
 				transform.DORotate(new Vector3(0,0,200), 0.5f);
-
+				_rigidbody.velocity = Vector2.zero;
+				transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
 				_rigidbody.velocity *= 0.5f;
 				_collider.enabled 	= false;
 				Destroy(gameObject, 1f);

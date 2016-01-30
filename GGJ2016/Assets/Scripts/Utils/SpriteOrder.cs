@@ -30,7 +30,7 @@ public class SpriteOrder : MonoBehaviour {
 	{
 		if(sp != null)
 		{
-			sp.sortingOrder = i + -500 - (int)(transform.position.y * 10);
+			sp.sortingOrder = i + -500 - (int)(sp.bounds.min.y * 10);
 		}
 	}
 }

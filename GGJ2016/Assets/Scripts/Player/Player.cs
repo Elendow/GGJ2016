@@ -178,6 +178,8 @@ public class Player : MonoBehaviour {
 		if(other.gameObject.CompareTag("Lava"))
 		{
 			Dead();
+			_rigidbody.velocity = Vector2.zero;
+			transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
 		}
 	}
 }
