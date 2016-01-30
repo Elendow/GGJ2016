@@ -1,22 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 using InControl;
+using DG.Tweening;
 
 public class Player : MonoBehaviour {
 
-	public float speed = 5;
 	public int playerNum;
+
+	public float throwForce 	= 200f;
+	public float speed 			= 5f;
+	public float repickDelay 	= 1.5f;
+	public float reviveDelay	= 1f;
+	public float pushDistance	= 3f;
+
 	public GameObject itemPosition;
 
-	private float _repickDelay = 1.5f;
+	private bool _alive = true;
+	private float _repickCounter = 0;
+	private float _reviveCounter = 0;
 	private Item _item;
 	private Item _lastItem;
+	private Vector2 _initPos;
 	private Rigidbody2D _rigidbody;
 	private PlayerInput _playerInput;
+	private Collider2D _collider;
 
 	void Awake() 
 	{
-		_rigidbody 		= GetComponent<Rigidbody2D>();
+		_rigidbody 	= GetComponent<Rigidbody2D>();
+		_collider 	= GetComponent<Collider2D>();
+		_initPos 	= transform.position;
 
 		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
@@ -44,37 +57,80 @@ public class Player : MonoBehaviour {
 	
 	void Update() 
 	{
-		if(_playerInput != null)
+		if(_alive)
 		{
-			//Movement
-			_rigidbody.velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed);
-
-			//Throw item logic
-			if(_item != null)
+			if(_playerInput != null)
 			{
+				//Movement
+				_rigidbody.velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed);
+
+				//Right Joystick Logic
 				if(_playerInput.shoot.IsPressed)
 				{
-					_item.Throw(Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X) * Mathf.Rad2Deg);
-					_lastItem 	= _item;
-					_item 		= null;
-					itemPosition.SetActive(false);
+					float _angle = Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X);
+
+					//Throw Item
+					if(_item != null)
+					{
+						_item.Throw(_angle, throwForce);
+						_lastItem 	= _item;
+						_item 		= null;
+						itemPosition.SetActive(false);
+					}
+					//Push Player
+					else
+					{
+						Ray2D ray = new Ray2D(transform.position, new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle) * pushDistance));
+						Debug.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(_angle), Mathf.Sin(_angle) * pushDistance, 0)); 
+					}
+				}
+			}
+
+			//Delay applied in order to not re-pick up an item too fast
+			if(_lastItem != null)
+			{
+				_repickCounter += Time.deltaTime;
+				if(repickDelay < _repickCounter)
+				{
+					_repickCounter 	= 0f;
+					_lastItem 		= null;
 				}
 			}
 		}
-
-		//Delay applied in order to not re-pick up an item too fast
-		if(_lastItem != null)
+		else
 		{
-			_repickDelay -= Time.deltaTime;
-			if(_repickDelay < 0)
+			_reviveCounter += Time.deltaTime;
+			if(reviveDelay < _reviveCounter)
 			{
-				_repickDelay 	= 1.5f;
-				_lastItem 		= null;
+				transform.DOPause();
+				_reviveCounter 			= 0f;
+				_alive 					= true;
+				transform.position 		= _initPos;
+				transform.rotation 		= Quaternion.identity;
+				transform.localScale 	= Vector3.one;
+				_collider.enabled 		= true;
 			}
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+	private void Dead()
+	{
+		if(_item != null)
+			Destroy(_item.gameObject);
+
+		transform.DOScale(Vector3.zero, 0.5f);
+		transform.DORotate(new Vector3(0,0,200), 0.5f);
+		itemPosition.SetActive(false);
+
+		_rigidbody.velocity *= 0.5f;
+		_collider.enabled 	= false;
+		_alive 				= false;
+		_lastItem 			= null;
+		_item 				= null;
+
+	}
+
+	private void OnTriggerEnter2D(Collider2D other)
 	{
 		//Pick up an item
 		if(other.gameObject.CompareTag("Item"))
@@ -91,11 +147,15 @@ public class Player : MonoBehaviour {
 				else if(_item != null && _item.IsThrown)
 				{
 					_lastItem = _item;
-					_item.Throw(_i.Angle);
+					_item.Throw(_i.Angle, throwForce);
 					_item = _i;
 					_item.PickUp(itemPosition.transform);
 				}
 			}
+		}
+		if(other.gameObject.CompareTag("Lava"))
+		{
+			Dead();
 		}
 	}
 }

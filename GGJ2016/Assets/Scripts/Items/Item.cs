@@ -31,18 +31,17 @@ public class Item : MonoBehaviour
 		_rigidbody.isKinematic 	= true;
 	}
 
-	public void Throw(float angle)
+	public void Throw(float angle, float force)
 	{
 		Vector2 forward;
 		float angleMagnitud;
 		_isThrown 				= true;
 		_angle 					= angle;
-		angleMagnitud 			= _angle * Mathf.Deg2Rad;
-		forward 				= new Vector2(Mathf.Cos(angleMagnitud), Mathf.Sin(angleMagnitud));
+		forward 				= new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle));
 		transform.parent  		= null;
 		_collider.enabled 		= true;
 		_rigidbody.isKinematic 	= false;
-		_rigidbody.AddForce(forward * 100);
+		_rigidbody.AddForce(forward * force);
 
 		Debug.Log(itemName + " is thrown. Angle " + angle);
 	}

@@ -44,16 +44,16 @@ Material:
         second: 0.1
       data:
         first:
+          name: _Offest
+        second: 0.3
+      data:
+        first:
           name: _ObstacleAdd
         second: 0.1
       data:
         first:
           name: _SamplingDist
         second: 0.01
-      data:
-        first:
-          name: _Offest
-        second: 0.3
       data:
         first:
           name: _AddMul
