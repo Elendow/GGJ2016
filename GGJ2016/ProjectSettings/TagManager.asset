@@ -14,9 +14,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Shadow
+  - Light
+  - Ambient
   - 
   - 
   - 
@@ -39,6 +39,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Ambient
+    uniqueID: 3931710229
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
