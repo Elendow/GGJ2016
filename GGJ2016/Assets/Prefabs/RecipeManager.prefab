@@ -48,6 +48,23 @@ MonoBehaviour:
   - {fileID: 11400404, guid: c94c2d420346a49cf9b6a4e3c4c8e77d, type: 2}
   - {fileID: 11437028, guid: a5688ce8085704984aba7235035bf251, type: 2}
   - {fileID: 11426554, guid: 70c1bd6da4b214ce0947054d8ec438a2, type: 2}
+  spawners: []
+  balanceTiempoEspera:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 10
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 60
+      value: 2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
