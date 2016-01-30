@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
 
 	public float speed = 5;
 	public int playerNum;
+	public GameObject itemPosition;
 
 	private float _repickDelay = 1.5f;
 	private Item _item;
@@ -16,21 +17,27 @@ public class Player : MonoBehaviour {
 	void Awake() 
 	{
 		_rigidbody 		= GetComponent<Rigidbody2D>();
-		_playerInput 	= new PlayerInput();
 
 		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
 			//Take the controller assigned on the menu
+			_playerInput 		= new PlayerInput(true);
 			_playerInput.Device = InputManager.Devices[GameManager.Instance.playerDevices[playerNum - 1]];
 			Debug.Log(playerNum + " " + _playerInput.Device.Name);
 		}
 		else
 		{
 			//Test only
+			Debug.Log("Controllers " + InputManager.Devices.Count);
+
 			if(InputManager.Devices.Count > playerNum - 1)
 			{
+				_playerInput = new PlayerInput(true);
 				_playerInput.Device = InputManager.Devices[playerNum - 1];
 			}
+			else
+				_playerInput = new PlayerInput(false);
+			
 			Debug.LogWarning("No input for player " + playerNum);
 		}
 	}
@@ -50,6 +57,7 @@ public class Player : MonoBehaviour {
 					_item.Throw(Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X) * Mathf.Rad2Deg);
 					_lastItem 	= _item;
 					_item 		= null;
+					itemPosition.SetActive(false);
 				}
 			}
 		}
@@ -71,9 +79,23 @@ public class Player : MonoBehaviour {
 		//Pick up an item
 		if(other.gameObject.CompareTag("Item"))
 		{
-			_item = other.GetComponent<Item>();
-			if(_lastItem != _item)
-				_item.PickUp(transform);
+			Item _i = other.GetComponent<Item>();
+			if(_lastItem != _i)
+			{
+				if(_item == null)
+				{
+					_item =  _i;
+					itemPosition.SetActive(true);
+					_item.PickUp(itemPosition.transform);
+				}
+				else if(_item != null && _item.IsThrown)
+				{
+					_lastItem = _item;
+					_item.Throw(_i.Angle);
+					_item = _i;
+					_item.PickUp(itemPosition.transform);
+				}
+			}
 		}
 	}
 }
@@ -87,7 +109,7 @@ public class PlayerInput : PlayerActionSet
 	private PlayerAction _left, _right, _up, _down;
 	private PlayerAction _shootLeft, _shootRight, _shootUp, _shootDown;
 
-	public PlayerInput()
+	public PlayerInput(bool haveGamepad)
 	{
 		_left 		= CreatePlayerAction("Move Left");
 		_right 		= CreatePlayerAction("Move Right");
@@ -100,29 +122,31 @@ public class PlayerInput : PlayerActionSet
 		_shootUp 	= CreatePlayerAction("Shoot Up");
 		_shootDown 	= CreatePlayerAction("Shoot Down");
 		shoot		= CreateTwoAxisPlayerAction(_shootLeft, _shootRight, _shootDown, _shootUp);
-		shoot.LowerDeadZone = 1;
-		shoot.UpperDeadZone = 1;
-
-		//Keyboard (ignored if gamepad is assigned)
-		_left.AddDefaultBinding(Key.LeftArrow);
-		_right.AddDefaultBinding(Key.RightArrow);
-		_up.AddDefaultBinding(Key.UpArrow);
-		_down.AddDefaultBinding(Key.DownArrow);
-
-		_shootLeft.AddDefaultBinding(Key.A);
-		_shootRight.AddDefaultBinding(Key.D);
-		_shootUp.AddDefaultBinding(Key.W);
-		_shootDown.AddDefaultBinding(Key.S);
 
 		//Gamepad
-		_left.AddDefaultBinding(InputControlType.LeftStickLeft);
-		_right.AddDefaultBinding(InputControlType.LeftStickRight);
-		_up.AddDefaultBinding(InputControlType.LeftStickUp);
-		_down.AddDefaultBinding(InputControlType.LeftStickDown);
+		if(haveGamepad)
+		{
+			_left.AddDefaultBinding(InputControlType.LeftStickLeft);
+			_right.AddDefaultBinding(InputControlType.LeftStickRight);
+			_up.AddDefaultBinding(InputControlType.LeftStickUp);
+			_down.AddDefaultBinding(InputControlType.LeftStickDown);
 
-		_shootLeft.AddDefaultBinding(InputControlType.RightStickLeft);
-		_shootRight.AddDefaultBinding(InputControlType.RightStickRight);
-		_shootUp.AddDefaultBinding(InputControlType.RightStickUp);
-		_shootDown.AddDefaultBinding(InputControlType.RightStickDown);
+			_shootLeft.AddDefaultBinding(InputControlType.RightStickLeft);
+			_shootRight.AddDefaultBinding(InputControlType.RightStickRight);
+			_shootUp.AddDefaultBinding(InputControlType.RightStickUp);
+			_shootDown.AddDefaultBinding(InputControlType.RightStickDown);
+		}
+		else
+		{
+			_left.AddDefaultBinding(Key.LeftArrow);
+			_right.AddDefaultBinding(Key.RightArrow);
+			_up.AddDefaultBinding(Key.UpArrow);
+			_down.AddDefaultBinding(Key.DownArrow);
+
+			_shootLeft.AddDefaultBinding(Key.A);
+			_shootRight.AddDefaultBinding(Key.D);
+			_shootUp.AddDefaultBinding(Key.W);
+			_shootDown.AddDefaultBinding(Key.S);
+		}
 	}
 }

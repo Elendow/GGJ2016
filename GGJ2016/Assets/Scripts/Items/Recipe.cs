@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class Recipe : MonoBehaviour {
 
+public class Recipe {
 
-	public List<Item> itemsRecipe;
+	public List<int> itemsRecipe;
+	public List<int> itemsDone; //-1 bad, 0 none, 1 good
 
-	void Start(){
-
-		itemsRecipe = new List<Item>();
-
+	private void Start(){
+		itemsRecipe = new List<int>();
+		itemsDone = new List<int>();
 	}
 
-	public void AddItem(Item item){
-
+	public void AddItem(int itemID){
 		if (itemsRecipe == null){
-			itemsRecipe = new List<Item>();
+			itemsRecipe = new List<int>();
+			itemsDone = new List<int>();
 		}
 
-		itemsRecipe.Add (item);
+		itemsDone.Add(0);
+		itemsRecipe.Add(itemID);
 	}
-
 }

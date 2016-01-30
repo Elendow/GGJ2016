@@ -8,19 +8,17 @@ public class MainMenuManager : MonoBehaviour {
 	public GameObject[] playerTick;
 	public int maxPlayer = 2;
 
-	private InputDevice[] controllers;
-
-	private int index = 0;
+	private InputDevice[] _controllers;
 
 	private void Start()
 	{
-		controllers = new InputDevice[4];
+		_controllers = new InputDevice[4];
 		for(int i = 0; i < InputManager.Devices.Count; i++)
 		{
 			if(InputManager.Devices[i].IsAttached)
 			{
 				Debug.Log("Player " + (i+1) + " uses " + InputManager.Devices[i].Name);
-				controllers[i] = InputManager.Devices[i];	
+				_controllers[i] = InputManager.Devices[i];	
 				GameManager.Instance.playerDevices.Add(i);
 			}
 		}
@@ -28,15 +26,15 @@ public class MainMenuManager : MonoBehaviour {
 
 	private void Update()
 	{
-		for(int i = 0; i < controllers.Length; i++)
+		for(int i = 0; i < _controllers.Length; i++)
 		{
-			if(controllers[i] != null)
+			if(_controllers[i] != null)
 			{
-				if(controllers[i].Action1.IsPressed)
+				if(_controllers[i].Action1.IsPressed)
 					playerTick[i].SetActive(true);
-				else if(controllers[i].Action2.IsPressed)
+				else if(_controllers[i].Action2.IsPressed)
 					playerTick[i].SetActive(false);
-				else if(controllers[i].Action4.IsPressed)
+				else if(_controllers[i].Action4.IsPressed)
 					SceneManager.LoadScene("Gameplay");
 			}
 		}
