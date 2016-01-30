@@ -36,16 +36,16 @@ Material:
         second: 0.7
       data:
         first:
-          name: _Offest
-        second: 0.3
-      data:
-        first:
           name: _ObstacleMul
         second: 2
       data:
         first:
           name: _EmissionColorMul
         second: 0.1
+      data:
+        first:
+          name: _Offest
+        second: 0.3
       data:
         first:
           name: _ObstacleAdd

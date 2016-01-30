@@ -12,6 +12,7 @@ GameObject:
   - 58: {fileID: 5815584}
   - 50: {fileID: 5035878}
   - 114: {fileID: 11460214}
+  - 114: {fileID: 11485256}
   m_Layer: 0
   m_Name: 4 - Rana
   m_TagString: Item
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Rana
   itemID: 4
+--- !u!114 &11485256
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ade4d6a1c2246319075cf0bdabcbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  update: 1
 --- !u!212 &21227962
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -153,6 +166,10 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: 4c65cba609d4949a1bcc0e7d77d481fd,
         type: 3}
+    - target: {fileID: 0}
+      propertyPath: update
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 130770}

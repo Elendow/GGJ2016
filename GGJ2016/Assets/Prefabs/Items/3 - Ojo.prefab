@@ -12,6 +12,7 @@ GameObject:
   - 58: {fileID: 5864462}
   - 50: {fileID: 5024462}
   - 114: {fileID: 11462626}
+  - 114: {fileID: 11480896}
   m_Layer: 0
   m_Name: 3 - Ojo
   m_TagString: Item
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Ojo
   itemID: 3
+--- !u!114 &11480896
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 154700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ade4d6a1c2246319075cf0bdabcbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  update: 1
 --- !u!212 &21220274
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -145,6 +158,10 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: 2d84319e61aa447ada85966b4eb1a9b7,
         type: 3}
+    - target: {fileID: 0}
+      propertyPath: update
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 154700}

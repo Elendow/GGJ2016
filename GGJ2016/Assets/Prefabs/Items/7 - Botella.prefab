@@ -12,6 +12,7 @@ GameObject:
   - 58: {fileID: 5858182}
   - 50: {fileID: 5018536}
   - 114: {fileID: 11426554}
+  - 114: {fileID: 11415914}
   m_Layer: 0
   m_Name: 7 - Botella
   m_TagString: Item
@@ -62,6 +63,18 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.1
+--- !u!114 &11415914
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 166980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ade4d6a1c2246319075cf0bdabcbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  update: 1
 --- !u!114 &11426554
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -153,6 +166,10 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: a729879997782425f9c6d8b3f567d71f,
         type: 3}
+    - target: {fileID: 0}
+      propertyPath: update
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 166980}

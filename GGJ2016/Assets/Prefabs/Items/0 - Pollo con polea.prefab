@@ -12,6 +12,7 @@ GameObject:
   - 58: {fileID: 5848068}
   - 50: {fileID: 5041544}
   - 114: {fileID: 11416090}
+  - 114: {fileID: 11476910}
   m_Layer: 0
   m_Name: 0 - Pollo con polea
   m_TagString: Item
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Pollo con polea
   itemID: 0
+--- !u!114 &11476910
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ade4d6a1c2246319075cf0bdabcbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  update: 1
 --- !u!212 &21241620
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -151,6 +164,10 @@ Prefab:
         type: 3}
     - target: {fileID: 0}
       propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: update
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
