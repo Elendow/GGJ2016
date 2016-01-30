@@ -55,4 +55,9 @@ public class Item : MonoBehaviour
 	{
 		get { return _angle; }
 	}
+
+	public Sprite IconSprite
+	{
+		get { return GetComponent<SpriteRenderer>().sprite; }
+	}
 }

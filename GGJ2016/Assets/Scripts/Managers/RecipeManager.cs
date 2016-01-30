@@ -29,7 +29,7 @@ public class RecipeManager : MonoBehaviour {
 		//Asigno 4 items aleatorios distribuyendolos cada 3
 		for (int i_item = 0; i_item <=3; i_item++){
 			for (int j_recipe = 0; j_recipe <3; j_recipe++){ //Hacerlo para 3 recetas
-				recipes [flag_recipe].AddItem (randomItems[i_item].itemID);
+				recipes [flag_recipe].AddItem (randomItems[i_item].itemID, randomItems[i_item].IconSprite);
 				//Debug.Log("1 Asignado " + randomItems[i_item].Name + " a Player " + (flag_recipe +1));
 				flag_recipe++;
 				if (flag_recipe > 3) {
@@ -41,7 +41,7 @@ public class RecipeManager : MonoBehaviour {
 		//Los 4 ultimos items los asigno cada 2
 		for (int i_item = 4; i_item <=7; i_item++){
 			for (int j_recipe = 0; j_recipe <2; j_recipe++){ //Hacerlo para 2 recetas
-				recipes [flag_recipe].AddItem (randomItems[i_item].itemID);
+				recipes [flag_recipe].AddItem (randomItems[i_item].itemID, randomItems[i_item].IconSprite);
 				//Debug.Log("2 Asignado " + randomItems[i_item].Name + " a Player " + (flag_recipe +1));
 				flag_recipe++;
 				if (flag_recipe > 3) { 
@@ -65,6 +65,4 @@ public class RecipeManager : MonoBehaviour {
 		}
 		return list;
 	}
-
-
 }
