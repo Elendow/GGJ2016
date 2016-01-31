@@ -90,7 +90,7 @@ public class Player : MonoBehaviour {
 								float distance = Vector2.Distance(transform.position, hit.point);
 								if(distance <= pushDistance)
 								{
-									hit.collider.gameObject.GetComponent<Player>().Push(distance, angle);
+									hit.collider.gameObject.GetComponent<Player>().Push(distance, angle, true);
 								}
 							}
 						}
@@ -142,14 +142,16 @@ public class Player : MonoBehaviour {
 
 	}
 
-	public void Push(float distance, float angle)
+	public void Push(float distance, float angle, bool item)
 	{
-		if(_item != null)
-			_item.Throw(angle, throwForce);
-
+		if(item)
+		{
+			if(_item != null)
+				_item.Throw(angle, throwForce);
+		}
 		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
-		_rigidbody.AddForce(forward * (throwForce * 0.5f));
+		_rigidbody.AddForce(forward * throwForce);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -172,6 +174,7 @@ public class Player : MonoBehaviour {
 					_item.Throw(_i.Angle, throwForce);
 					_item = _i;
 					_item.PickUp(itemPosition.transform);
+					Push(1, _i.Angle, false);
 				}
 			}
 		}
