@@ -21,6 +21,8 @@ public class Player : MonoBehaviour {
 	private Item _item;
 	private Item _lastItem;
 	private Vector2 _initPos;
+	private Vector2 _velocity;
+	private Vector2 _force;
 	private Rigidbody2D _rigidbody;
 	private PlayerInput _playerInput;
 	private Collider2D _collider;
@@ -62,7 +64,8 @@ public class Player : MonoBehaviour {
 			if(_playerInput != null)
 			{
 				//Movement
-				_rigidbody.velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed);
+				_velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed) + _force;
+				_rigidbody.velocity = _velocity;
 
 				//Right Joystick Logic
 				if(_playerInput.shoot.IsPressed)
@@ -96,6 +99,10 @@ public class Player : MonoBehaviour {
 						}
 					}
 				}
+
+				_force -= new Vector2(0.1f,0.1f);
+				if(_force.x < 0) _force.x = 0;
+				if(_force.y < 0) _force.y = 0;
 			}
 
 			//Delay applied in order to not re-pick up an item too fast
@@ -139,6 +146,7 @@ public class Player : MonoBehaviour {
 		_alive 				= false;
 		_lastItem 			= null;
 		_item 				= null;
+		_force 				= Vector2.zero;
 
 	}
 
@@ -150,8 +158,7 @@ public class Player : MonoBehaviour {
 				_item.Throw(angle, throwForce);
 		}
 		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
-		_rigidbody.AddForce(forward * throwForce);
+		_force = forward * (speed + 4);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -174,8 +181,10 @@ public class Player : MonoBehaviour {
 					_item.Throw(_i.Angle, throwForce);
 					_item = _i;
 					_item.PickUp(itemPosition.transform);
-					Push(1, _i.Angle, false);
 				}
+
+				if(_i.IsThrown)
+					Push(1, _i.Angle, false);
 			}
 		}
 		if(other.gameObject.CompareTag("Lava"))
