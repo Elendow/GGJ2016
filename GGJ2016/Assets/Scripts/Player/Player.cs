@@ -56,7 +56,7 @@ public class Player : MonoBehaviour {
 				_playerInput = new PlayerInput(true);
 				_playerInput.Device = InputManager.Devices[playerNum - 1];
 			}
-			else
+			else if(playerNum == 4)
 				_playerInput = new PlayerInput(false);
 			
 			Debug.LogWarning("No input for player " + playerNum);

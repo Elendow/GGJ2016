@@ -38,6 +38,12 @@ public class MainMenuManager : MonoBehaviour {
 				else if(_controllers[i].Action4.IsPressed)
 					SceneManager.LoadScene("Gameplay");
 			}
+			else if(Input.GetKeyDown(KeyCode.Return))
+				masks[3].DOPlay();
+			else if(Input.GetKeyDown(KeyCode.Space))
+				SceneManager.LoadScene("Gameplay");
+			else if(Input.GetKeyDown(KeyCode.Escape))
+				Application.Quit();
 		}
 	}
 }
