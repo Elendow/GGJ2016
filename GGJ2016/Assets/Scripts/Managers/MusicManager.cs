@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MusicManager : MonoBehaviour {
 
+	public AudioClip clipBGGameplay;
+
 	public AudioSource soundPrefab;
 
 	public AudioClip clipItemCorrecto;
@@ -13,6 +15,8 @@ public class MusicManager : MonoBehaviour {
 	public AudioClip clipRecogeItem;
 	public AudioClip clipCaeLavaItem;
 	public AudioClip clipCaeLavaPJ;
+
+
 
 	public float pitchVariation = 0.2f;
 
@@ -25,6 +29,26 @@ public class MusicManager : MonoBehaviour {
 	public void  playCaeLavaItem() { PlaySound (clipCaeLavaItem); }
 	public void  playCaeLavaPJ() { PlaySound (clipCaeLavaPJ); }
 
+	private AudioSource _audioSource;
+
+	void Start(){
+		_audioSource = GetComponent<AudioSource> ();
+
+		GameOverManager goManager = FindObjectOfType<GameOverManager> ();
+		goManager.OnGameStart = HandleOnGameStartDelegate;
+		goManager.OnGameOver = HandleOnGameOverDelegate;
+	}
+
+	void HandleOnGameOverDelegate (int ganador)
+	{
+		_audioSource.Stop ();
+	}
+
+	void HandleOnGameStartDelegate ()
+	{
+		_audioSource.clip = clipBGGameplay;
+		_audioSource.Play ();
+	}
 
 	/// <summary>
 	/// Plaies the sound.

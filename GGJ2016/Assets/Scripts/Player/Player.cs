@@ -60,11 +60,18 @@ public class Player : MonoBehaviour {
 			
 			Debug.LogWarning("No input for player " + playerNum);
 		}
+
+		FindObjectOfType<GameOverManager>().OnGameOver += HandleGameOver;
+	}
+
+	void HandleOnGameOverDelegate (int ganador)
+	{
+		
 	}
 	
 	void Update() 
 	{
-		if(_alive)
+		if(_alive && GameManager.Instance.isInGame)
 		{
 			if(_playerInput != null)
 			{
@@ -170,6 +177,13 @@ public class Player : MonoBehaviour {
 		}
 		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 		_force = forward * (speed + 4);
+	}
+
+	private void HandleGameOver(int ganador){
+		if (playerNum != ganador) {
+			//EXPLOTA
+			Debug.Log("Player" + playerNum + " pierde" );
+		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)

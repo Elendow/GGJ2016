@@ -11,6 +11,22 @@ public class RecipeManager : MonoBehaviour {
 
 	private float timeStarted;
 
+	void Start(){
+		GameOverManager goManager = FindObjectOfType<GameOverManager> ();
+		goManager.OnGameStart = HandleOnGameStartDelegate;
+		goManager.OnGameOver = HandleOnGameOverDelegate;
+	}
+
+	void HandleOnGameOverDelegate (int ganador)
+	{
+		
+	}
+
+	void HandleOnGameStartDelegate ()
+	{
+		timeStarted = Time.time;
+	}
+
 	private void Awake() 
 	{
 
@@ -25,8 +41,8 @@ public class RecipeManager : MonoBehaviour {
 		OrganizeRecipes();
 
 		//Comentar esto para activarlo cuando vengamos del menu
-		GameManager.Instance.isInGame = true;
-		timeStarted = Time.time;
+		//GameManager.Instance.isInGame = true;
+
 		StartCoroutine(RoutineSpawn());
 
 	}
@@ -96,11 +112,8 @@ public class RecipeManager : MonoBehaviour {
 	}
 
 
-
 	IEnumerator RoutineSpawn(){
-
-
-
+		
 		SpawnItemsInitial ();
 		yield return new WaitForSeconds (balanceTiempoEspera.Evaluate(Time.time - timeStarted));
 
@@ -111,4 +124,6 @@ public class RecipeManager : MonoBehaviour {
 				
 		}
 	}
+
+
 }

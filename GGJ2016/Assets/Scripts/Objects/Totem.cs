@@ -11,7 +11,7 @@ public class Totem : MonoBehaviour {
 	public Image[] ingredientsIcon;
 	public Text scoreText;
 
-	private int _score = 0;
+	public int score = 0;
 	private Recipe _recipe;
 	private RecipeManager _recipeManager;
 	private AmbientManager _ambientManager;
@@ -20,11 +20,14 @@ public class Totem : MonoBehaviour {
 
 	MusicManager _musicManager;
 
+	GameOverManager _gameOverManager;
+
 	private void Start()
 	{
 		_musicManager =	GameObject.FindObjectOfType<MusicManager> ();
 		_recipeManager = GameObject.FindObjectOfType<RecipeManager>();
 		_ambientManager = GameObject.FindObjectOfType<AmbientManager>();
+		_gameOverManager = GameObject.FindObjectOfType<GameOverManager>();
 
 		if(_recipeManager == null)
 			Debug.LogError("Recipe Manager is Missing!");
@@ -75,6 +78,11 @@ public class Totem : MonoBehaviour {
 			CalculateScore();
 			other.transform.parent.gameObject.SetActive(false);
 			TweenOrb.DORestart();
+
+			if (!_recipe.itemsDone.Contains (0)) {
+				_gameOverManager.GameOver ();
+			}
+
 		}
 	}
 
@@ -100,13 +108,17 @@ public class Totem : MonoBehaviour {
 
 	private void CalculateScore()
 	{
-		_score = 0;
+		score = 0;
+
 
 	for(int i = 0; i < _recipe.itemsDone.Count; i++)
 		{
-			_score += _recipe.itemsDone[i];
+			score += _recipe.itemsDone[i];
 		}
 
-		scoreText.text = _score.ToString();
+		scoreText.text = score.ToString();
+
+
 	}
+
 }
