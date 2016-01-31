@@ -11,11 +11,13 @@ public class Item : MonoBehaviour
 	private bool _isThrown;
 	private Rigidbody2D _rigidbody;
 	private Collider2D _collider;
+	private SpriteRenderer _sp;
 
 	private void Awake() 
 	{
 		_rigidbody 	= GetComponent<Rigidbody2D>();
 		_collider 	= GetComponent<Collider2D>();
+		_sp 		= GetComponent<SpriteRenderer>();
 	}
 
 	public void Update()
@@ -30,6 +32,7 @@ public class Item : MonoBehaviour
 		transform.localPosition	= Vector2.zero;
 		_collider.enabled 		= false;
 		_rigidbody.isKinematic 	= true;
+		_sp.sortingLayerName	= "UI";
 	}
 
 	public void Throw(float angle, float force)
@@ -42,6 +45,7 @@ public class Item : MonoBehaviour
 		_collider.enabled 		= true;
 		_rigidbody.isKinematic 	= false;
 		_rigidbody.AddForce(forward * force);
+		_sp.sortingLayerName	= "Default";
 
 		Debug.Log(itemName + " is thrown. Angle " + angle);
 	}
