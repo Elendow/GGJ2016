@@ -31,10 +31,11 @@ public class Player : MonoBehaviour {
 
 	void Awake() 
 	{
-		_rigidbody 	= GetComponent<Rigidbody2D>();
-		_collider 	= GetComponent<Collider2D>();
-		_animator	= GetComponent<Animator> ();
-		_initPos 	= transform.position;
+		_musicManager 	= FindObjectOfType<MusicManager>();
+		_rigidbody 		= GetComponent<Rigidbody2D>();
+		_collider 		= GetComponent<Collider2D>();
+		_animator		= GetComponent<Animator> ();
+		_initPos 		= transform.position;
 
  		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
