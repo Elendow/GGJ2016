@@ -15,6 +15,9 @@ public class Player : MonoBehaviour {
 
 	public GameObject itemPosition;
 	public GameObject pushParticles;
+	public GameObject lavaParticles;
+	public GameObject deadParticles;
+	public GameObject respawnParticles;
 
 	private bool _alive = true;
 	private bool _throw = false;
@@ -72,112 +75,104 @@ public class Player : MonoBehaviour {
 	
 	void Update() 
 	{
-		if(_alive && GameManager.Instance.isInGame)
+		if(GameManager.Instance.isInGame)
 		{
-			if(_playerInput != null)
+			if(_alive)
 			{
-				//Movement
-				_velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed) + _force;
-				_rigidbody.velocity = _velocity;
-
-				//Right Joystick Logic
-				if(_playerInput.shoot.IsPressed)
+				if(_playerInput != null)
 				{
+					//Movement
+					_velocity = new Vector2(_playerInput.move.X * speed, _playerInput.move.Y * speed) + _force;
+					_rigidbody.velocity = _velocity;
 
-
-
-					float angle = Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X);
-
-					//Throw Item
-					if(_item != null)
+					//Right Joystick Logic
+					if(_playerInput.shoot.IsPressed)
 					{
-						_item.Throw(angle, throwForce);
-						_lastItem 	= _item;
-						_item 		= null;
-					}
-					//Push Player
-					else
-					{
+						float angle = Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X);
 
-				
-
-						if(_lastItem == null && !_throw)
+						//Throw Item
+						if(_item != null)
 						{
-							_throw = true;
-							#if UNITY_EDITOR
-							Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
-							#endif
-							Vector3 dir =  new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
-							RaycastHit2D hit = Physics2D.Raycast(transform.position, dir.normalized, pushDistance);
-
-							if (hit.collider != null) 
+							_item.Throw(angle, throwForce);
+							_lastItem 	= _item;
+							_item 		= null;
+						}
+						//Push Player
+						else
+						{
+							if(_lastItem == null && !_throw)
 							{
-								if(hit.collider.gameObject.CompareTag("Player"))
+								_throw = true;
+								#if UNITY_EDITOR
+								Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
+								#endif
+								Vector3 dir =  new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
+								RaycastHit2D hit = Physics2D.Raycast(transform.position, dir.normalized, pushDistance);
+
+								if (hit.collider != null) 
 								{
-									float distance = Vector2.Distance(transform.position, hit.point);
-									hit.collider.transform.DOScale (hit.collider.transform.localScale * 1.5f, 0.2f).From ();
+									if(hit.collider.gameObject.CompareTag("Player"))
+									{
+										float distance = Vector2.Distance(transform.position, hit.point);
+										hit.collider.transform.DOScale (hit.collider.transform.localScale * 1.5f, 0.2f).From ();
 
-									if (distance <= pushDistance) {
-										hit.collider.gameObject.GetComponent<Player> ().Push (angle);
-										GameObject goPart = Instantiate (pushParticles, hit.point, Quaternion.identity) as GameObject;
-										Destroy (goPart, 3f);
+										if (distance <= pushDistance) {
+											hit.collider.gameObject.GetComponent<Player> ().Push (angle);
+											GameObject goPart = Instantiate (pushParticles, hit.point, Quaternion.identity) as GameObject;
+											Destroy (goPart, 3f);
 
-									} 
+										} 
 
-									this.ReBounce (angle);
-
-
+										this.ReBounce (angle);
+									}
 								}
 							}
 						}
-					
+						_rigidbody.velocity = _rigidbody.velocity / 2;
 					}
 
-					_rigidbody.velocity = _rigidbody.velocity / 2;
-
+					if(_force.x > 0.2f)
+						_force.x -= 0.1f;
+					else if(_force.x < -0.2f)
+						_force.x += 0.1f;
+					else
+						_force.x = 0;
+					
+					if(_force.y > 0.2f)
+						_force.y -= 0.1f;
+					else if(_force.y < -0.2f)
+						_force.y += 0.1f;
+					else
+						_force.y = 0;
 				}
-
-				if(_force.x > 0.2f)
-					_force.x -= 0.1f;
-				else if(_force.x < -0.2f)
-					_force.x += 0.1f;
-				else
-					_force.x = 0;
-				
-				if(_force.y > 0.2f)
-					_force.y -= 0.1f;
-				else if(_force.y < -0.2f)
-					_force.y += 0.1f;
-				else
-					_force.y = 0;
-			}
-
-			//Delay applied in order to not re-pick up an item too fast
-			if(_lastItem != null || _throw)
-			{
-				_repickCounter += Time.deltaTime;
-				if(repickDelay < _repickCounter)
+				//Delay applied in order to not re-pick up an item too fast
+				if(_lastItem != null || _throw)
 				{
-					_repickCounter 	= 0f;
-					_lastItem 		= null;
-					_throw 			= false;
+					_repickCounter += Time.deltaTime;
+					if(repickDelay < _repickCounter)
+					{
+						_repickCounter 	= 0f;
+						_lastItem 		= null;
+						_throw 			= false;
+					}
 				}
+				//Paso información al animator
+				_animator.SetBool("carry", (_item != null));
+				_animator.SetFloat ("speed", _velocity.magnitude);
 			}
-			//Paso información al animator
-			_animator.SetBool("carry", (_item != null));
-			_animator.SetFloat ("speed", _velocity.magnitude);
-		}
-		else
-		{
-			_reviveCounter += Time.deltaTime;
-			if(reviveDelay < _reviveCounter)
+			else
 			{
-				_reviveCounter 			= 0f;
-				_alive 					= true;
-				transform.position 		= _initPos;
-				transform.rotation 		= Quaternion.identity;
-				transform.localScale 	= Vector3.one;
-				_collider.enabled 		= true;
+				_reviveCounter += Time.deltaTime;
+				if(reviveDelay < _reviveCounter)
+				{
+					_reviveCounter 			= 0f;
+					_alive 					= true;
+					transform.position 		= _initPos;
+					transform.rotation 		= Quaternion.identity;
+					transform.localScale 	= Vector3.one;
+					_collider.enabled 		= true;
+					Instantiate(respawnParticles, transform.position, Quaternion.identity);
+				}
 			}
 		}
 	}
@@ -225,7 +220,10 @@ public class Player : MonoBehaviour {
 
 	private void HandleGameOver(int ganador){
 		if (playerNum != ganador) {
-			//EXPLOTA
+			Instantiate(deadParticles, transform.position, Quaternion.identity);
+			_velocity = Vector2.zero;
+			_force = Vector2.zero;
+			gameObject.SetActive(false);
 			Debug.Log("Player" + playerNum + " pierde" );
 		}
 	}
@@ -275,8 +273,13 @@ public class Player : MonoBehaviour {
 		{
 			Dead();
 			_rigidbody.velocity = Vector2.zero;
-			transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
+			transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f).OnComplete(LavaFall);
 		}
+	}
+
+	private void LavaFall()
+	{
+		Destroy(Instantiate(lavaParticles, transform.position, Quaternion.identity), 2f);
 	}
 }
 
