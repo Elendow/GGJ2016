@@ -242,7 +242,7 @@ public class Player : MonoBehaviour {
 		{
 			Item _i = other.transform.parent.GetComponent<Item>();
 
-			_recipeManager.UnlockSpawner (_i.spawnerOcupado);
+	
 			if(!_i.IsPickedUp && _lastItem != _i)
 			{
 				if(_item == null && (_i.IsThrown || _lastItem == null))
