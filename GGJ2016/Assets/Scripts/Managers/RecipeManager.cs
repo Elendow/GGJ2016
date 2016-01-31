@@ -9,12 +9,13 @@ public class RecipeManager : MonoBehaviour {
 
 	public AnimationCurve balanceTiempoEspera;
 
+	private GameOverManager goManager;
 	private float timeStarted;
 
 	void Start(){
-		GameOverManager goManager = FindObjectOfType<GameOverManager> ();
+		goManager = FindObjectOfType<GameOverManager> ();
 		goManager.OnGameStart += IniciaRutina;
-	//	goManager.OnGameOver += HandleOnGameOverDelegate;
+		goManager.OnGameOver += HandleOnGameOverDelegate;
 	}
 
 	void HandleOnGameOverDelegate (int ganador)
@@ -136,5 +137,9 @@ public class RecipeManager : MonoBehaviour {
 		}
 	}
 
-
+	void OnDestroy()
+	{
+		goManager.OnGameStart -= IniciaRutina;
+		goManager.OnGameOver  -= HandleOnGameOverDelegate;
+	}
 }
