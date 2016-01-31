@@ -14,6 +14,7 @@ public class Player : MonoBehaviour {
 	public float pushDistance	= 3f;
 
 	public GameObject itemPosition;
+	public GameObject pushParticles;
 
 	private bool _alive = true;
 	private bool _throw = false;
@@ -100,7 +101,8 @@ public class Player : MonoBehaviour {
 							#if UNITY_EDITOR
 							Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
 							#endif
-							RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
+							//RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
+							RaycastHit2D hit = Physics2D.CircleCast(transform.position, 0.3f,  new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
 							if (hit.collider != null) {
 								if(hit.collider.gameObject.CompareTag("Player"))
 								{
@@ -108,6 +110,7 @@ public class Player : MonoBehaviour {
 									if(distance <= pushDistance)
 									{
 										hit.collider.gameObject.GetComponent<Player>().Push(angle);
+										Instantiate(pushParticles, hit.point, Quaternion.identity);
 									}
 								}
 							}
