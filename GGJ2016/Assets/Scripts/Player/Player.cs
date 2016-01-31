@@ -206,6 +206,11 @@ public class Player : MonoBehaviour {
 						Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
 						_force += forward * (speed + 4);
 					}
+
+					if (_item.spawnerOcupado != null) {
+						_item.spawnerOcupado.itsFree = true;
+						_item.spawnerOcupado  = null;
+					}
 				}
 				else if(_item != null && _i.IsThrown)
 				{

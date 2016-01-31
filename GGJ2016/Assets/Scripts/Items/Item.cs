@@ -14,6 +14,8 @@ public class Item : MonoBehaviour
 	private Collider2D _collider;
 	private SpriteRenderer _sp;
 
+
+	public Spawner spawnerOcupado;
 	private void Awake() 
 	{
 		_rigidbody 	= GetComponent<Rigidbody2D>();

@@ -107,6 +107,7 @@ public class RecipeManager : MonoBehaviour {
 	private void InstanciateItemInSpawner(Item item, Spawner spawner){
 		GameObject instantiatedItem = GameObject.Instantiate (item.gameObject);
 		instantiatedItem.transform.position = spawner.transform.position;
+		item.spawnerOcupado = spawner;
 		spawner.itsFree = false;
 
 	}
