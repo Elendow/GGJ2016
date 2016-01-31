@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 804117cbf0e746f43b5de5cbcba7e1a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundPrefab: {fileID: 174748, guid: 2f040ebdc7bd6c14c9eacd5093a57270, type: 2}
+  soundPrefab: {fileID: 8256318, guid: 2f040ebdc7bd6c14c9eacd5093a57270, type: 2}
   clipItemCorrecto: {fileID: 8300000, guid: 22b2f72d0e88ade48a7ab8f3c1d61e8c, type: 3}
   clipItemIncorrecto: {fileID: 8300000, guid: ad170d26ca0e6b941a710a043a66182a, type: 3}
   clipPickItem: {fileID: 0}
@@ -124,6 +124,7 @@ MonoBehaviour:
   clipRecogeItem: {fileID: 0}
   clipCaeLavaItem: {fileID: 0}
   clipCaeLavaPJ: {fileID: 0}
+  pitchVariation: 0.2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

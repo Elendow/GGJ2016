@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MusicManager : MonoBehaviour {
 
-	public GameObject soundPrefab;
+	public AudioSource soundPrefab;
 
 	public AudioClip clipItemCorrecto;
 	public AudioClip clipItemIncorrecto;
@@ -14,6 +14,7 @@ public class MusicManager : MonoBehaviour {
 	public AudioClip clipCaeLavaItem;
 	public AudioClip clipCaeLavaPJ;
 
+	public float pitchVariation = 0.2f;
 
 	// Use this for initialization
 	void Start () {
@@ -43,11 +44,12 @@ public class MusicManager : MonoBehaviour {
 	public void PlaySound(AudioClip clip){
 
 		if (clip != null && soundPrefab != null) {
-			GameObject instantiated = GameObject.Instantiate (soundPrefab);
-			AudioSource aSource = instantiated.GetComponent<AudioSource> ();
+			
+			AudioSource aSource = GameObject.Instantiate (soundPrefab) as AudioSource;
 			aSource.clip = clip;
 			aSource.PlayOneShot (clip);
-			Destroy (instantiated, clip.length + 0.5f);
+			aSource.pitch += Random.Range (-pitchVariation, pitchVariation);
+			Destroy (aSource.gameObject, clip.length + 0.5f);
 		}
 
 	}

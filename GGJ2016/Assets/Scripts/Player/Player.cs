@@ -26,12 +26,14 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D _rigidbody;
 	private PlayerInput _playerInput;
 	private Collider2D _collider;
+	private Animator _animator;
 
 	void Awake() 
 	{
 		_rigidbody 	= GetComponent<Rigidbody2D>();
 		_collider 	= GetComponent<Collider2D>();
 		_initPos 	= transform.position;
+		_animator	= GetComponent<Animator> ();
 
 		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
@@ -118,6 +120,9 @@ public class Player : MonoBehaviour {
 					_lastItem 		= null;
 				}
 			}
+			//Paso información al animator
+			_animator.SetBool("carry", (this._item != null));
+			_animator.SetFloat ("speed", this._velocity.magnitude);
 		}
 		else
 		{

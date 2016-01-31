@@ -17,8 +17,11 @@ public class Totem : MonoBehaviour {
 
 	public DOTweenAnimation TweenOrb;
 
+	MusicManager _musicManager;
+
 	private void Start()
 	{
+		_musicManager =	GameObject.FindObjectOfType<MusicManager> ();
 		_recipeManager = GameObject.FindObjectOfType<RecipeManager>();
 
 		if(_recipeManager == null)
@@ -54,7 +57,7 @@ public class Totem : MonoBehaviour {
 					_recipe.itemsDone[_index] = 1;
 					ingredientsBackground[_index].color = Color.green;
 					ingredientsBackground[_index].GetComponent<DOTweenAnimation> ().DORestart ();
-					FindObjectOfType<MusicManager>().playItemCorrecto ();
+					_musicManager.playItemCorrecto ();
 				}
 				else
 				{
@@ -89,7 +92,7 @@ public class Totem : MonoBehaviour {
 			ingredientsBackground[_screwItem].GetComponent<DOTweenAnimation>().DORestart();
 		}
 
-		FindObjectOfType<MusicManager>().playItemIncorrecto ();
+		_musicManager.playItemIncorrecto ();
 	}
 
 	private void CalculateScore()
