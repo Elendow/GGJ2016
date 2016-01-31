@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using DG.Tweening;
 using InControl;
+using UnityEngine.SceneManagement;
 
 
 public class GameOverManager : MonoBehaviour {
@@ -27,7 +28,7 @@ public class GameOverManager : MonoBehaviour {
 	void Update(){
 		if (canRestart) {
 			if (InputManager.ActiveDevice.AnyButton) {
-				Application.LoadLevel ("Gameplay");
+				SceneManager.LoadScene ("Gameplay");
 
 			}
 		}
@@ -86,7 +87,14 @@ public class GameOverManager : MonoBehaviour {
 		} else {
 			//El ganador es totemsOrdenados [0].playerNum
 			ganador = totemsOrdenados [0].playerNum;
-			txtGameOver.text = "PLAYER " + ganador + "WINS";
+			string color = "";
+
+			if(ganador == 1) color = "<color='red'>";
+			else if(ganador == 2) color = "<color='green'>";
+			else if(ganador == 3) color = "<color='purple'>";
+			else if(ganador == 4) color = "<color='blue'>";
+
+			txtGameOver.text = color +"PLAYER " + ganador + " WINS</color>";
 		}
 		txtGameOver.gameObject.SetActive (true);
 		OnGameOver (ganador);
