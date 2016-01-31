@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
 	public string itemName;
 	public int itemID;
+	public GameObject lavaParticles;
 
 	private float _angle;
 	private bool _isThrown;
@@ -20,7 +21,7 @@ public class Item : MonoBehaviour
 	private void Awake() 
 	{
 		_rigidbody 		= GetComponent<Rigidbody2D>();
-		_colliders	= GetComponentsInChildren<Collider2D>() ;
+		_colliders		= GetComponentsInChildren<Collider2D>() ;
 		_sp 			= GetComponent<SpriteRenderer>();
 	}
 
@@ -71,23 +72,23 @@ public class Item : MonoBehaviour
 		{
 			if(!_isThrown && !_pickedUp)
 			{
-				transform.DOScale(Vector3.zero, 0.5f);
-				transform.DORotate(new Vector3(0,0,200), 0.5f);
+				_pickedUp = true;
 				_rigidbody.velocity = Vector2.zero;
-				transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
-				_rigidbody.velocity *= 0.5f;
-				for (int i = 0; i < _colliders.Length; i++) {
-					_colliders [i].enabled = false;
-				};
-
-				if (transform.parent != null) {
-					Destroy (transform.parent.gameObject, 1f);
-				} else {
-					gameObject.SetActive (false);
+				transform.DOScale(Vector3.zero, 1f);
+				transform.DORotate(new Vector3(0,0,200), 1f);
+				transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 1f).OnComplete(LavaFall);
+				for (int i = 0; i < _colliders.Length; i++) 
+				{
+					_colliders[i].enabled = false;
 				}
-
+				Destroy (gameObject, 1.1f);
 			}
 		}
+	}
+
+	private void LavaFall()
+	{
+		Instantiate(lavaParticles, transform.position, Quaternion.identity);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)

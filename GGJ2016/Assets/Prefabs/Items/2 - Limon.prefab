@@ -120,6 +120,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Limon
   itemID: 2
+  lavaParticles: {fileID: 155750, guid: 2183e04d09de7ff4f96775e035faff7a, type: 2}
+  spawnerOcupado: {fileID: 0}
 --- !u!114 &11417834
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -233,6 +235,10 @@ Prefab:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: lavaParticles
+      value: 
+      objectReference: {fileID: 155750, guid: 2183e04d09de7ff4f96775e035faff7a, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 176066}
