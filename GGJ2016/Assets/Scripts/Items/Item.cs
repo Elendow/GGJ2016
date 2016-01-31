@@ -79,7 +79,7 @@ public class Item : MonoBehaviour
 				for (int i = 0; i < _colliders.Length; i++) {
 					_colliders [i].enabled = false;
 				};
-				Destroy(other.transform.parent.gameObject, 1f);
+				Destroy(transform.parent.gameObject, 1f);
 			}
 		}
 	}

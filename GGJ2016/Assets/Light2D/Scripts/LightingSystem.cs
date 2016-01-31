@@ -119,6 +119,11 @@ namespace Light2D
         private Material _normalMappedLightMaterial;
         private Material _lightCombiningMaterial;
         private Material _alphaBlendedMaterial;
+
+		private Material _ambientLightComputeMaterial;
+		private Material _lightOverlayMaterial;
+		private Material _lightSourcesBlurMaterial;
+		private Material _ambientLightBlurMaterial;
 #if LIGHT2D_2DTK
         private tk2dCamera _tk2dCamera;
 #endif
@@ -185,6 +190,11 @@ namespace Light2D
             var lightPixelsPerUnityMeter = LightPixelsPerUnityMeter;
 
             InitTK2D();
+
+			_ambientLightComputeMaterial 	= new Material(AmbientLightComputeMaterial);
+			_lightOverlayMaterial 			= new Material(LightOverlayMaterial);
+			_lightSourcesBlurMaterial 		= new Material(LightSourcesBlurMaterial);;
+			_ambientLightBlurMaterial 		= new Material(AmbientLightBlurMaterial);
 
             if (_camera.orthographic)
             {
@@ -546,7 +556,7 @@ namespace Light2D
 
         private void RenderLightSourcesBlur()
         {
-            if (BlurLightSources && LightSourcesBlurMaterial != null)
+            if (BlurLightSources && _lightSourcesBlurMaterial != null)
             {
                 Profiler.BeginSample("LightingSystem.OnRenderImage Bluring Light Sources");
 
@@ -563,8 +573,8 @@ namespace Light2D
 
                 _bluredLightTexture.DiscardContents();
                 _lightSourcesTexture.filterMode = FilterMode.Bilinear;
-                LightSourcesBlurMaterial.mainTexture = _lightSourcesTexture;
-                Graphics.Blit(null, _bluredLightTexture, LightSourcesBlurMaterial);
+                _lightSourcesBlurMaterial.mainTexture = _lightSourcesTexture;
+                Graphics.Blit(null, _bluredLightTexture, _lightSourcesBlurMaterial);
 
                 if (LightTexturesFilterMode == FilterMode.Point)
                 {
@@ -579,7 +589,7 @@ namespace Light2D
 
         private void RenderAmbientLight()
         {
-            if (!EnableAmbientLight || AmbientLightComputeMaterial == null)
+            if (!EnableAmbientLight || _ambientLightComputeMaterial == null)
                 return;
 
             Profiler.BeginSample("LightingSystem.OnRenderImage Ambient Light");
@@ -624,20 +634,20 @@ namespace Light2D
                 var posShift = ((Vector2) (_currPos - _oldPos)/LightPixelSize).Div(texSize);
                 _oldPos = _currPos;
 
-                AmbientLightComputeMaterial.SetTexture("_LightSourcesTex", _ambientEmissionTexture);
-                AmbientLightComputeMaterial.SetTexture("_MainTex", _prevAmbientTexture);
-                AmbientLightComputeMaterial.SetVector("_Shift", posShift);
+                _ambientLightComputeMaterial.SetTexture("_LightSourcesTex", _ambientEmissionTexture);
+                _ambientLightComputeMaterial.SetTexture("_MainTex", _prevAmbientTexture);
+                _ambientLightComputeMaterial.SetVector("_Shift", posShift);
 
                 _ambientTexture.DiscardContents();
-                Graphics.Blit(null, _ambientTexture, AmbientLightComputeMaterial);
+                Graphics.Blit(null, _ambientTexture, _ambientLightComputeMaterial);
 
-                if (BlurAmbientLight && AmbientLightBlurMaterial != null)
+                if (BlurAmbientLight && _ambientLightBlurMaterial != null)
                 {
                     Profiler.BeginSample("LightingSystem.OnRenderImage Bluring Ambient Light");
 
                     _prevAmbientTexture.DiscardContents();
-                    AmbientLightBlurMaterial.mainTexture = _ambientTexture;
-                    Graphics.Blit(null, _prevAmbientTexture, AmbientLightBlurMaterial);
+                    _ambientLightBlurMaterial.mainTexture = _ambientTexture;
+                    Graphics.Blit(null, _prevAmbientTexture, _ambientLightBlurMaterial);
 
                     var tmpblur = _prevAmbientTexture;
                     _prevAmbientTexture = _ambientTexture;
@@ -662,7 +672,7 @@ namespace Light2D
             Vector2 worldOffset = Quaternion.Inverse(_camera.transform.rotation)*(LightCamera.transform.position - _camera.transform.position);
             Vector2 offset = Vector2.Scale(lightTexelSize, -worldOffset*lightPixelsPerUnityMeter);
 
-            var lightSourcesTex = BlurLightSources && LightSourcesBlurMaterial != null && LightTexturesFilterMode != FilterMode.Point
+            var lightSourcesTex = BlurLightSources && _lightSourcesBlurMaterial != null && LightTexturesFilterMode != FilterMode.Point
                 ? _bluredLightTexture
                 : _lightSourcesTexture;
             float xDiff = _camera.aspect/LightCamera.aspect;
@@ -678,11 +688,11 @@ namespace Light2D
             var scale = new Vector2(scaleY*xDiff, scaleY);
 
             var oldAmbientFilterMode = _ambientTexture == null ? FilterMode.Point : _ambientTexture.filterMode;
-            LightOverlayMaterial.SetTexture("_AmbientLightTex", EnableAmbientLight ? _ambientTexture : null);
-            LightOverlayMaterial.SetTexture("_LightSourcesTex", lightSourcesTex);
-            LightOverlayMaterial.SetTexture("_GameTex", src);
-            LightOverlayMaterial.SetVector("_Offset", offset);
-            LightOverlayMaterial.SetVector("_Scale", scale);
+            _lightOverlayMaterial.SetTexture("_AmbientLightTex", EnableAmbientLight ? _ambientTexture : null);
+            _lightOverlayMaterial.SetTexture("_LightSourcesTex", lightSourcesTex);
+            _lightOverlayMaterial.SetTexture("_GameTex", src);
+            _lightOverlayMaterial.SetVector("_Offset", offset);
+            _lightOverlayMaterial.SetVector("_Scale", scale);
 
             if (_screenBlitTempTex == null || _screenBlitTempTex.width != src.width ||
                 _screenBlitTempTex.height != src.height)
@@ -694,7 +704,7 @@ namespace Light2D
             }
 
             _screenBlitTempTex.DiscardContents();
-            Graphics.Blit(null, _screenBlitTempTex, LightOverlayMaterial);
+            Graphics.Blit(null, _screenBlitTempTex, _lightOverlayMaterial);
 
             if (_ambientTexture != null)
                 _ambientTexture.filterMode = oldAmbientFilterMode;
