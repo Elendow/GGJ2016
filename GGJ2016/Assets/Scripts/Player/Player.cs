@@ -101,9 +101,10 @@ public class Player : MonoBehaviour {
 							#if UNITY_EDITOR
 							Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
 							#endif
-							//RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
-							RaycastHit2D hit = Physics2D.CircleCast(transform.position, 0.3f,  new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
-							if (hit.collider != null) {
+							Vector3 dir =  new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
+							RaycastHit2D hit = Physics2D.Raycast(transform.position, dir.normalized, pushDistance);
+							if (hit.collider != null) 
+							{
 								if(hit.collider.gameObject.CompareTag("Player"))
 								{
 									float distance = Vector2.Distance(transform.position, hit.point);
@@ -118,9 +119,19 @@ public class Player : MonoBehaviour {
 					}
 				}
 
-				_force -= new Vector2(0.1f,0.1f);
-				if(_force.x < 0) _force.x = 0;
-				if(_force.y < 0) _force.y = 0;
+				if(_force.x > 0.2f)
+					_force.x -= 0.1f;
+				else if(_force.x < -0.2f)
+					_force.x += 0.1f;
+				else
+					_force.x = 0;
+				
+				if(_force.y > 0.2f)
+					_force.y -= 0.1f;
+				else if(_force.y < -0.2f)
+					_force.y += 0.1f;
+				else
+					_force.y = 0;
 			}
 
 			//Delay applied in order to not re-pick up an item too fast
@@ -178,8 +189,8 @@ public class Player : MonoBehaviour {
 			_lastItem 	= _item;
 			_item 		= null;
 		}
-		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-		_force = forward * (speed + 4);
+		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+		_force = forward * speed;
 	}
 
 	private void HandleGameOver(int ganador){
