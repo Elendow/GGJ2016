@@ -34,6 +34,12 @@ public class RecipeManager : MonoBehaviour {
 
 		spawners = new List<Spawner>(FindObjectsOfType<Spawner> ());
 		recipes = new List<Recipe>();
+
+		for (int i = 0; i < spawners.Count; i++) {
+			spawners [i].id = i + 1;
+		}
+			
+
 		for(int i = 0; i < 4; i++)
 			recipes.Add(new Recipe());
 
@@ -118,14 +124,17 @@ public class RecipeManager : MonoBehaviour {
 	private void InstanciateItemInSpawner(Item item, Spawner spawner){
 		GameObject instantiatedItem = GameObject.Instantiate (item.gameObject);
 		instantiatedItem.transform.position = spawner.transform.position;
-		item.spawnerOcupado = spawner;
+		item.spawnerOcupado = spawner.id;
 		spawner.itsFree = false;
 
 	}
 
 
 	IEnumerator RoutineSpawn(){
-		
+
+		timeStarted = Time.time;
+		Init ();
+
 		SpawnItemsInitial ();
 		yield return new WaitForSeconds (balanceTiempoEspera.Evaluate(Time.time - timeStarted));
 
@@ -141,5 +150,26 @@ public class RecipeManager : MonoBehaviour {
 	{
 		goManager.OnGameStart -= IniciaRutina;
 		goManager.OnGameOver  -= HandleOnGameOverDelegate;
+	}
+
+
+	public bool ItsSpawnerFree(int id){
+		bool itsFree = true;
+		Spawner spawner = GetSpawner (id);
+		itsFree = (spawner != null && spawner.itsFree);
+		return itsFree;
+	}
+
+	public void UnlockSpawner(int _id){
+		Spawner sp = GetSpawner (_id);
+
+		if (sp != null) {
+			sp.itsFree = true;
+		}
+	}
+
+
+	public Spawner GetSpawner(int _id){
+		return spawners.Find (s => s.id == _id);
 	}
 }

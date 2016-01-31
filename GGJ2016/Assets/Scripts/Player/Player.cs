@@ -30,9 +30,11 @@ public class Player : MonoBehaviour {
 	private Collider2D _collider;
 	private Animator _animator;
 	private MusicManager _musicManager;
+	private RecipeManager _recipeManager;
 
 	void Awake() 
 	{
+		_recipeManager 	= FindObjectOfType<RecipeManager>();
 		_musicManager 	= FindObjectOfType<MusicManager>();
 		_rigidbody 		= GetComponent<Rigidbody2D>();
 		_collider 		= GetComponent<Collider2D>();
@@ -236,6 +238,8 @@ public class Player : MonoBehaviour {
 		if(other.gameObject.CompareTag("Item"))
 		{
 			Item _i = other.transform.parent.GetComponent<Item>();
+
+			_recipeManager.UnlockSpawner (_i.spawnerOcupado);
 			if(!_i.IsPickedUp && _lastItem != _i)
 			{
 				if(_item == null && (_i.IsThrown || _lastItem == null))
@@ -253,10 +257,7 @@ public class Player : MonoBehaviour {
 						_force += forward * (speed + 4);
 					}
 
-					if (_item.spawnerOcupado != null) {
-						_item.spawnerOcupado.itsFree = true;
-						_item.spawnerOcupado  = null;
-					}
+
 				}
 				else if(_item != null && _i.IsThrown)
 				{

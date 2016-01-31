@@ -17,7 +17,7 @@ public class Item : MonoBehaviour
 	private SpriteRenderer _sp;
 
 
-	public Spawner spawnerOcupado;
+	public int spawnerOcupado;
 	private void Awake() 
 	{
 		_rigidbody 		= GetComponent<Rigidbody2D>();
