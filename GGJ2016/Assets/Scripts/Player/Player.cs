@@ -75,6 +75,9 @@ public class Player : MonoBehaviour {
 	
 	void Update() 
 	{
+		if(Input.GetKeyDown(KeyCode.Escape))
+			Application.Quit;
+		
 		if(GameManager.Instance.isInGame)
 		{
 			if(_alive)
