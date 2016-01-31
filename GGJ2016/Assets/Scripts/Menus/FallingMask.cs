@@ -18,7 +18,7 @@ public class FallingMask : MonoBehaviour {
 		{
 			Debug.Log("sound");
 			_done--;
-			PlaySound(_audio.clip, 0.4f);
+			PlaySound(_audio.clip, 0.8f);
 		}
 	}
 
