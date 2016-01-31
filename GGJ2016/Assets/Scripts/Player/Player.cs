@@ -98,7 +98,7 @@ public class Player : MonoBehaviour {
 									float distance = Vector2.Distance(transform.position, hit.point);
 									if(distance <= pushDistance)
 									{
-										hit.collider.gameObject.GetComponent<Player>().Push(distance, angle, true);
+										hit.collider.gameObject.GetComponent<Player>().Push(angle);
 									}
 								}
 							}
@@ -122,8 +122,8 @@ public class Player : MonoBehaviour {
 				}
 			}
 			//Paso información al animator
-			_animator.SetBool("carry", (this._item != null));
-			_animator.SetFloat ("speed", this._velocity.magnitude);
+			_animator.SetBool("carry", (_item != null));
+			_animator.SetFloat ("speed", _velocity.magnitude);
 		}
 		else
 		{
@@ -157,16 +157,13 @@ public class Player : MonoBehaviour {
 		_force 				= Vector2.zero;
 	}
 
-	public void Push(float distance, float angle, bool item)
+	public void Push(float angle)
 	{
-		if(item)
+		if(_item != null)
 		{
-			if(_item != null)
-			{
-				_item.Throw(angle, throwForce);
-				_lastItem 	= _item;
-				_item 		= null;
-			}
+			_item.Throw(angle, throwForce);
+			_lastItem 	= _item;
+			_item 		= null;
 		}
 		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 		_force = forward * (speed + 4);
@@ -177,25 +174,30 @@ public class Player : MonoBehaviour {
 		//Pick up an item
 		if(other.gameObject.CompareTag("Item"))
 		{
-			Item _i = other.GetComponent<Item>();
+			Item _i = other.gameObject.GetComponent<Item>();
 			if(_lastItem != _i)
 			{
-				_musicManager.playPickItem();
+				_lastItem 	= _item;
+				_item 		=  _i;
 
-				if(_item == null)
+				if(_lastItem == null)
 				{
-					_item =  _i;
+					_musicManager.playPickItem();
 					_item.PickUp(itemPosition.transform);
-					if(_i.IsThrown)
-						Push(1, _i.Angle, false);
+
+					if(_item.IsThrown)
+					{
+						Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
+						_force = forward * (speed + 4);
+					}
 				}
-				else if(_item != null && _item.IsThrown)
+				else if(_lastItem != null && _item.IsThrown)
 				{
-					_lastItem = _item;
-					_item.Throw(_i.Angle, throwForce);
-					_item = _i;
+					_musicManager.playPickItem();
+					_lastItem.Throw(_i.Angle, throwForce);
 					_item.PickUp(itemPosition.transform);
-					Push(1, _i.Angle, false);
+					Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
+					_force = forward * (speed + 4);
 				}
 			}
 		}

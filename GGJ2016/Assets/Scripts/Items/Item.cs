@@ -34,6 +34,7 @@ public class Item : MonoBehaviour
 		transform.localPosition	= Vector2.zero;
 		_collider.enabled 		= false;
 		_rigidbody.isKinematic 	= true;
+		_rigidbody.velocity		= Vector2.zero;
 		_sp.sortingLayerName	= "UI";
 		_isThrown				= false;
 	}
@@ -68,6 +69,14 @@ public class Item : MonoBehaviour
 				_collider.enabled 	= false;
 				Destroy(gameObject, 1f);
 			}
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if(other.gameObject.CompareTag("Paredes"))
+		{
+			_rigidbody.velocity = Vector2.zero;
 		}
 	}
 
