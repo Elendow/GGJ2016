@@ -22,14 +22,19 @@ public class Item : MonoBehaviour
 
 	public void Update()
 	{
-		if(Mathf.Abs(_rigidbody.velocity.x) < 0.1f && Mathf.Abs(_rigidbody.velocity.y) < 0.1f)
+		if(Mathf.Abs(_rigidbody.velocity.x) < 0.2f && Mathf.Abs(_rigidbody.velocity.y) < 0.2f)
 			_isThrown = false;
+<<<<<<< Updated upstream
 
 //		Debug.Log(_isThrown, gameObject);
+=======
+>>>>>>> Stashed changes
 	}
 
 	public void PickUp(Transform parent)
 	{
+		Debug.Log(itemName + " is pikcup. IsThrown " + _isThrown);
+
 		transform.parent  		= parent;
 		transform.localPosition	= Vector2.zero;
 		_collider.enabled 		= false;

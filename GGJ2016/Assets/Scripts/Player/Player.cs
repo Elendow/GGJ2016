@@ -26,6 +26,7 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D _rigidbody;
 	private PlayerInput _playerInput;
 	private Collider2D _collider;
+<<<<<<< Updated upstream
 	private Animator _animator;
 
 	void Awake() 
@@ -34,6 +35,16 @@ public class Player : MonoBehaviour {
 		_collider 	= GetComponent<Collider2D>();
 		_initPos 	= transform.position;
 		_animator	= GetComponent<Animator> ();
+=======
+	private MusicManager _musicManager;
+
+	void Awake() 
+	{
+		_musicManager = FindObjectOfType<MusicManager>();
+		_rigidbody 	  = GetComponent<Rigidbody2D>();
+		_collider 	  = GetComponent<Collider2D>();
+		_initPos 	  = transform.position;
+>>>>>>> Stashed changes
 
 		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
@@ -80,7 +91,6 @@ public class Player : MonoBehaviour {
 						_item.Throw(angle, throwForce);
 						_lastItem 	= _item;
 						_item 		= null;
-						itemPosition.SetActive(false);
 					}
 					//Push Player
 					else
@@ -129,7 +139,6 @@ public class Player : MonoBehaviour {
 			_reviveCounter += Time.deltaTime;
 			if(reviveDelay < _reviveCounter)
 			{
-				transform.DOPause();
 				_reviveCounter 			= 0f;
 				_alive 					= true;
 				transform.position 		= _initPos;
@@ -147,7 +156,7 @@ public class Player : MonoBehaviour {
 
 		transform.DOScale(Vector3.zero, 0.5f);
 		transform.DORotate(new Vector3(0,0,200), 0.5f);
-		itemPosition.SetActive(false);
+		_musicManager.playCaeLavaPJ();
 
 		_rigidbody.velocity *= 0.5f;
 		_collider.enabled 	= false;
@@ -155,7 +164,6 @@ public class Player : MonoBehaviour {
 		_lastItem 			= null;
 		_item 				= null;
 		_force 				= Vector2.zero;
-
 	}
 
 	public void Push(float distance, float angle, bool item)
@@ -163,7 +171,11 @@ public class Player : MonoBehaviour {
 		if(item)
 		{
 			if(_item != null)
+			{
 				_item.Throw(angle, throwForce);
+				_lastItem 	= _item;
+				_item 		= null;
+			}
 		}
 		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 		_force = forward * (speed + 4);
@@ -177,11 +189,14 @@ public class Player : MonoBehaviour {
 			Item _i = other.GetComponent<Item>();
 			if(_lastItem != _i)
 			{
+				_musicManager.playPickItem();
+
 				if(_item == null)
 				{
 					_item =  _i;
-					itemPosition.SetActive(true);
 					_item.PickUp(itemPosition.transform);
+					if(_i.IsThrown)
+						Push(1, _i.Angle, false);
 				}
 				else if(_item != null && _item.IsThrown)
 				{
@@ -189,13 +204,11 @@ public class Player : MonoBehaviour {
 					_item.Throw(_i.Angle, throwForce);
 					_item = _i;
 					_item.PickUp(itemPosition.transform);
-				}
-
-				if(_i.IsThrown)
 					Push(1, _i.Angle, false);
+				}
 			}
 		}
-		if(other.gameObject.CompareTag("Lava"))
+		else if(other.gameObject.CompareTag("Lava"))
 		{
 			Dead();
 			_rigidbody.velocity = Vector2.zero;
