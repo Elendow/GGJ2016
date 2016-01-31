@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 using UnityEngine;
 
 namespace Light2D
@@ -119,11 +117,7 @@ namespace Light2D
         private Material _normalMappedLightMaterial;
         private Material _lightCombiningMaterial;
         private Material _alphaBlendedMaterial;
-
-		private Material _ambientLightComputeMaterial;
-		private Material _lightOverlayMaterial;
-		private Material _lightSourcesBlurMaterial;
-		private Material _ambientLightBlurMaterial;
+        private bool _halfTexelOffest;
 #if LIGHT2D_2DTK
         private tk2dCamera _tk2dCamera;
 #endif
@@ -189,12 +183,9 @@ namespace Light2D
 
             var lightPixelsPerUnityMeter = LightPixelsPerUnityMeter;
 
-            InitTK2D();
+            _halfTexelOffest = SystemInfo.graphicsDeviceVersion.StartsWith("Direct3D 9");
 
-			_ambientLightComputeMaterial 	= new Material(AmbientLightComputeMaterial);
-			_lightOverlayMaterial 			= new Material(LightOverlayMaterial);
-			_lightSourcesBlurMaterial 		= new Material(LightSourcesBlurMaterial);;
-			_ambientLightBlurMaterial 		= new Material(AmbientLightBlurMaterial);
+            InitTK2D();
 
             if (_camera.orthographic)
             {
@@ -556,7 +547,7 @@ namespace Light2D
 
         private void RenderLightSourcesBlur()
         {
-            if (BlurLightSources && _lightSourcesBlurMaterial != null)
+            if (BlurLightSources && LightSourcesBlurMaterial != null)
             {
                 Profiler.BeginSample("LightingSystem.OnRenderImage Bluring Light Sources");
 
@@ -573,8 +564,8 @@ namespace Light2D
 
                 _bluredLightTexture.DiscardContents();
                 _lightSourcesTexture.filterMode = FilterMode.Bilinear;
-                _lightSourcesBlurMaterial.mainTexture = _lightSourcesTexture;
-                Graphics.Blit(null, _bluredLightTexture, _lightSourcesBlurMaterial);
+                LightSourcesBlurMaterial.mainTexture = _lightSourcesTexture;
+                Graphics.Blit(null, _bluredLightTexture, LightSourcesBlurMaterial);
 
                 if (LightTexturesFilterMode == FilterMode.Point)
                 {
@@ -589,7 +580,7 @@ namespace Light2D
 
         private void RenderAmbientLight()
         {
-            if (!EnableAmbientLight || _ambientLightComputeMaterial == null)
+            if (!EnableAmbientLight || AmbientLightComputeMaterial == null)
                 return;
 
             Profiler.BeginSample("LightingSystem.OnRenderImage Ambient Light");
@@ -634,20 +625,20 @@ namespace Light2D
                 var posShift = ((Vector2) (_currPos - _oldPos)/LightPixelSize).Div(texSize);
                 _oldPos = _currPos;
 
-                _ambientLightComputeMaterial.SetTexture("_LightSourcesTex", _ambientEmissionTexture);
-                _ambientLightComputeMaterial.SetTexture("_MainTex", _prevAmbientTexture);
-                _ambientLightComputeMaterial.SetVector("_Shift", posShift);
+                AmbientLightComputeMaterial.SetTexture("_LightSourcesTex", _ambientEmissionTexture);
+                AmbientLightComputeMaterial.SetTexture("_MainTex", _prevAmbientTexture);
+                AmbientLightComputeMaterial.SetVector("_Shift", posShift);
 
                 _ambientTexture.DiscardContents();
-                Graphics.Blit(null, _ambientTexture, _ambientLightComputeMaterial);
+                Graphics.Blit(null, _ambientTexture, AmbientLightComputeMaterial);
 
-                if (BlurAmbientLight && _ambientLightBlurMaterial != null)
+                if (BlurAmbientLight && AmbientLightBlurMaterial != null)
                 {
                     Profiler.BeginSample("LightingSystem.OnRenderImage Bluring Ambient Light");
 
                     _prevAmbientTexture.DiscardContents();
-                    _ambientLightBlurMaterial.mainTexture = _ambientTexture;
-                    Graphics.Blit(null, _prevAmbientTexture, _ambientLightBlurMaterial);
+                    AmbientLightBlurMaterial.mainTexture = _ambientTexture;
+                    Graphics.Blit(null, _prevAmbientTexture, AmbientLightBlurMaterial);
 
                     var tmpblur = _prevAmbientTexture;
                     _prevAmbientTexture = _ambientTexture;
@@ -672,7 +663,7 @@ namespace Light2D
             Vector2 worldOffset = Quaternion.Inverse(_camera.transform.rotation)*(LightCamera.transform.position - _camera.transform.position);
             Vector2 offset = Vector2.Scale(lightTexelSize, -worldOffset*lightPixelsPerUnityMeter);
 
-            var lightSourcesTex = BlurLightSources && _lightSourcesBlurMaterial != null && LightTexturesFilterMode != FilterMode.Point
+            var lightSourcesTex = BlurLightSources && LightSourcesBlurMaterial != null && LightTexturesFilterMode != FilterMode.Point
                 ? _bluredLightTexture
                 : _lightSourcesTexture;
             float xDiff = _camera.aspect/LightCamera.aspect;
@@ -688,11 +679,11 @@ namespace Light2D
             var scale = new Vector2(scaleY*xDiff, scaleY);
 
             var oldAmbientFilterMode = _ambientTexture == null ? FilterMode.Point : _ambientTexture.filterMode;
-            _lightOverlayMaterial.SetTexture("_AmbientLightTex", EnableAmbientLight ? _ambientTexture : null);
-            _lightOverlayMaterial.SetTexture("_LightSourcesTex", lightSourcesTex);
-            _lightOverlayMaterial.SetTexture("_GameTex", src);
-            _lightOverlayMaterial.SetVector("_Offset", offset);
-            _lightOverlayMaterial.SetVector("_Scale", scale);
+            LightOverlayMaterial.SetTexture("_AmbientLightTex", EnableAmbientLight ? _ambientTexture : null);
+            LightOverlayMaterial.SetTexture("_LightSourcesTex", lightSourcesTex);
+            LightOverlayMaterial.SetTexture("_GameTex", src);
+            LightOverlayMaterial.SetVector("_Offset", offset);
+            LightOverlayMaterial.SetVector("_Scale", scale);
 
             if (_screenBlitTempTex == null || _screenBlitTempTex.width != src.width ||
                 _screenBlitTempTex.height != src.height)
@@ -704,7 +695,7 @@ namespace Light2D
             }
 
             _screenBlitTempTex.DiscardContents();
-            Graphics.Blit(null, _screenBlitTempTex, _lightOverlayMaterial);
+            Graphics.Blit(null, _screenBlitTempTex, LightOverlayMaterial);
 
             if (_ambientTexture != null)
                 _ambientTexture.filterMode = oldAmbientFilterMode;

@@ -29,6 +29,7 @@ namespace Light2D
         private SerializedProperty _lightObstaclesDistance;
         private SerializedProperty _lightTexturesFilterMode;
         private SerializedProperty _enableNormalMapping;
+        private SerializedProperty _affectOnlyThisCamera;
 #if LIGHT2D_2DTK
         private float _old2dtkCamSize;
         private DateTime _sizeChangeTime;
@@ -55,6 +56,7 @@ namespace Light2D
             _lightObstaclesDistance = serializedObject.FindProperty("LightObstaclesDistance");
             _lightTexturesFilterMode = serializedObject.FindProperty("LightTexturesFilterMode");
             _enableNormalMapping = serializedObject.FindProperty("EnableNormalMapping");
+            _affectOnlyThisCamera = serializedObject.FindProperty("AffectOnlyThisCamera");
         }
 
         public override void OnInspectorGUI()
