@@ -83,6 +83,9 @@ public class Player : MonoBehaviour {
 				//Right Joystick Logic
 				if(_playerInput.shoot.IsPressed)
 				{
+
+
+
 					float angle = Mathf.Atan2(_playerInput.shoot.Y, _playerInput.shoot.X);
 
 					//Throw Item
@@ -95,6 +98,9 @@ public class Player : MonoBehaviour {
 					//Push Player
 					else
 					{
+
+				
+
 						if(_lastItem == null && !_throw)
 						{
 							_throw = true;
@@ -103,20 +109,32 @@ public class Player : MonoBehaviour {
 							#endif
 							Vector3 dir =  new Vector3(Mathf.Cos(angle), Mathf.Sin(angle));
 							RaycastHit2D hit = Physics2D.Raycast(transform.position, dir.normalized, pushDistance);
+
 							if (hit.collider != null) 
 							{
 								if(hit.collider.gameObject.CompareTag("Player"))
 								{
 									float distance = Vector2.Distance(transform.position, hit.point);
-									if(distance <= pushDistance)
-									{
-										hit.collider.gameObject.GetComponent<Player>().Push(angle);
-										Instantiate(pushParticles, hit.point, Quaternion.identity);
-									}
+									hit.collider.transform.DOScale (hit.collider.transform.localScale * 1.5f, 0.2f).From ();
+
+									if (distance <= pushDistance) {
+										hit.collider.gameObject.GetComponent<Player> ().Push (angle);
+										GameObject goPart = Instantiate (pushParticles, hit.point, Quaternion.identity) as GameObject;
+										Destroy (goPart, 3f);
+
+									} 
+
+									this.ReBounce (angle);
+
+
 								}
 							}
 						}
+					
 					}
+
+					_rigidbody.velocity = _rigidbody.velocity / 2;
+
 				}
 
 				if(_force.x > 0.2f)
@@ -193,6 +211,18 @@ public class Player : MonoBehaviour {
 		_force = forward * speed;
 	}
 
+	private void ReBounce(float angle)
+	{
+		if(_item != null)
+		{
+			_item.Throw(angle, throwForce);
+			_lastItem 	= _item;
+			_item 		= null;
+		}
+		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
+		_force = forward * (-speed /3f);
+	}
+
 	private void HandleGameOver(int ganador){
 		if (playerNum != ganador) {
 			//EXPLOTA
@@ -215,6 +245,8 @@ public class Player : MonoBehaviour {
 					_musicManager.playPickItem();
 					_item.PickUp(itemPosition.transform);
 
+					_item.transform.DOScale (_item.transform.localScale * 1.5f, 0.2f).From ();
+
 					if(_item.IsThrown)
 					{
 						Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
@@ -233,6 +265,7 @@ public class Player : MonoBehaviour {
 					_musicManager.playPickItem();
 					_lastItem.Throw(_i.Angle, throwForce);
 					_item.PickUp(itemPosition.transform);
+					_item.transform.DOScale (_item.transform.localScale * 1.5f, 0.2f).From ();
 					Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
 					_force += forward * (speed + 4);
 				}
