@@ -54,7 +54,7 @@ public class Totem : MonoBehaviour {
 		{
 			Item _i = other.transform.parent.GetComponent<Item>();
 
-			if(_i.IsPickedUp)
+			if(!_i.IsPickedUp)
 			{
 				if(_recipe.itemsRecipe.Contains(_i.itemID))
 				{
