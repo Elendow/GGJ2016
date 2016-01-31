@@ -43,7 +43,7 @@ public class Totem : MonoBehaviour {
 	{
 		if(other.gameObject.CompareTag("Item"))
 		{
-			Item _i = other.GetComponent<Item>();
+			Item _i = other.transform.parent.GetComponent<Item>();
 
 			if(_recipe.itemsRecipe.Contains(_i.itemID))
 			{
@@ -66,14 +66,14 @@ public class Totem : MonoBehaviour {
 				{
 					BadItem();
 				}
-				other.gameObject.SetActive(false);
+				other.transform.parent.gameObject.SetActive(false);
 			}
 			else
 			{
 				BadItem();
 			}
 			CalculateScore();
-			other.gameObject.SetActive(false);	
+			other.transform.parent.gameObject.SetActive(false);
 			TweenOrb.DORestart();
 		}
 	}

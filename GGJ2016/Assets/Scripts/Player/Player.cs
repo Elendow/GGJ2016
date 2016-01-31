@@ -16,6 +16,7 @@ public class Player : MonoBehaviour {
 	public GameObject itemPosition;
 
 	private bool _alive = true;
+	private bool _throw = false;
 	private float _repickCounter = 0;
 	private float _reviveCounter = 0;
 	private Item _item;
@@ -86,8 +87,9 @@ public class Player : MonoBehaviour {
 					//Push Player
 					else
 					{
-						if(_lastItem == null)
+						if(_lastItem == null && !_throw)
 						{
+							_throw = true;
 							#if UNITY_EDITOR
 							Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
 							#endif
@@ -112,13 +114,14 @@ public class Player : MonoBehaviour {
 			}
 
 			//Delay applied in order to not re-pick up an item too fast
-			if(_lastItem != null)
+			if(_lastItem != null || _throw)
 			{
 				_repickCounter += Time.deltaTime;
 				if(repickDelay < _repickCounter)
 				{
 					_repickCounter 	= 0f;
 					_lastItem 		= null;
+					_throw 			= false;
 				}
 			}
 			//Paso información al animator
@@ -174,30 +177,31 @@ public class Player : MonoBehaviour {
 		//Pick up an item
 		if(other.gameObject.CompareTag("Item"))
 		{
-			Item _i = other.gameObject.GetComponent<Item>();
-			if(_lastItem != _i)
+			Item _i = other.transform.parent.GetComponent<Item>();
+			if(!_i.IsPickedUp && _lastItem != _i)
 			{
-				_lastItem 	= _item;
-				_item 		=  _i;
-
 				if(_lastItem == null)
 				{
+					_lastItem 	= _item;
+					_item 		=  _i;
 					_musicManager.playPickItem();
 					_item.PickUp(itemPosition.transform);
 
 					if(_item.IsThrown)
 					{
 						Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
-						_force = forward * (speed + 4);
+						_force += forward * (speed + 4);
 					}
 				}
 				else if(_lastItem != null && _item.IsThrown)
 				{
+					_lastItem 	= _item;
+					_item 		=  _i;
 					_musicManager.playPickItem();
 					_lastItem.Throw(_i.Angle, throwForce);
 					_item.PickUp(itemPosition.transform);
 					Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
-					_force = forward * (speed + 4);
+					_force += forward * (speed + 4);
 				}
 			}
 		}

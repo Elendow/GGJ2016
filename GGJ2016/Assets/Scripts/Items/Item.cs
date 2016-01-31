@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
 
 	private float _angle;
 	private bool _isThrown;
+	private bool _pickedUp = false;
 	private Rigidbody2D _rigidbody;
 	private Collider2D _collider;
 	private SpriteRenderer _sp;
@@ -37,6 +38,7 @@ public class Item : MonoBehaviour
 		_rigidbody.velocity		= Vector2.zero;
 		_sp.sortingLayerName	= "UI";
 		_isThrown				= false;
+		_pickedUp				= true;
 	}
 
 	public void Throw(float angle, float force)
@@ -51,6 +53,7 @@ public class Item : MonoBehaviour
 		_rigidbody.isKinematic 	= false;
 		_rigidbody.AddForce(forward * force);
 		_sp.sortingLayerName	= "Default";
+		_pickedUp				= false;
 
 		Debug.Log(itemName + " is thrown. Angle " + angle);
 	}
@@ -59,7 +62,7 @@ public class Item : MonoBehaviour
 	{
 		if(other.gameObject.CompareTag("Lava"))
 		{
-			if(!_isThrown)
+			if(!_isThrown && !_pickedUp)
 			{
 				transform.DOScale(Vector3.zero, 0.5f);
 				transform.DORotate(new Vector3(0,0,200), 0.5f);
@@ -67,7 +70,7 @@ public class Item : MonoBehaviour
 				transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
 				_rigidbody.velocity *= 0.5f;
 				_collider.enabled 	= false;
-				Destroy(gameObject, 1f);
+				Destroy(other.transform.parent.gameObject, 1f);
 			}
 		}
 	}
@@ -83,6 +86,11 @@ public class Item : MonoBehaviour
 	public bool IsThrown
 	{
 		get { return _isThrown; }
+	}
+
+	public bool IsPickedUp
+	{
+		get { return _pickedUp; }
 	}
 
 	public float Angle
