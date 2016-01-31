@@ -54,6 +54,7 @@ public class Totem : MonoBehaviour {
 					_recipe.itemsDone[_index] = 1;
 					ingredientsBackground[_index].color = Color.green;
 					ingredientsBackground[_index].GetComponent<DOTweenAnimation> ().DORestart ();
+					FindObjectOfType<MusicManager>().playItemCorrecto ();
 				}
 				else
 				{
@@ -86,6 +87,8 @@ public class Totem : MonoBehaviour {
 		_recipe.itemsDone[_screwItem] = -1;
 		ingredientsBackground[_screwItem].color = Color.red;
 		ingredientsBackground [_screwItem].GetComponent<DOTweenAnimation> ().DORestart ();
+
+		FindObjectOfType<MusicManager>().playItemIncorrecto ();
 	}
 
 	private void CalculateScore()
