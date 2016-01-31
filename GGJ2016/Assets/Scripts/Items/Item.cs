@@ -72,7 +72,7 @@ public class Item : MonoBehaviour
 				transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
 				_rigidbody.velocity *= 0.5f;
 				_collider.enabled 	= false;
-				Destroy(other.transform.parent.gameObject, 1f);
+				Destroy(transform.parent.gameObject, 1f);
 			}
 		}
 	}
