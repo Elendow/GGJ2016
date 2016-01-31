@@ -6,6 +6,10 @@ public class Teleporter : MonoBehaviour {
 	public Transform target;
 	
 	private void OnTriggerEnter2D(Collider2D other){
-		other.transform.position = target.position;
+
+		if (!other.CompareTag ("Item")) {
+			other.transform.position = target.position;
+		}
+
 	}
 }

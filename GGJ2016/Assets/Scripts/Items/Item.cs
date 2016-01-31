@@ -11,16 +11,17 @@ public class Item : MonoBehaviour
 	private bool _isThrown;
 	private bool _pickedUp = false;
 	private Rigidbody2D _rigidbody;
-	private Collider2D _collider;
+	private Collider2D[] _colliders;
+
 	private SpriteRenderer _sp;
 
 
 	public Spawner spawnerOcupado;
 	private void Awake() 
 	{
-		_rigidbody 	= GetComponent<Rigidbody2D>();
-		_collider 	= GetComponent<Collider2D>();
-		_sp 		= GetComponent<SpriteRenderer>();
+		_rigidbody 		= GetComponent<Rigidbody2D>();
+		_colliders	= GetComponentsInChildren<Collider2D>() ;
+		_sp 			= GetComponent<SpriteRenderer>();
 	}
 
 	public void Update()
@@ -35,8 +36,10 @@ public class Item : MonoBehaviour
 
 		transform.parent  		= parent;
 		transform.localPosition	= Vector2.zero;
-		_collider.enabled 		= false;
-		_rigidbody.isKinematic 	= true;
+		for (int i = 0; i < _colliders.Length; i++) {
+			_colliders [i].enabled = false;
+		}
+		_rigidbody.isKinematic 	= true; 
 		_rigidbody.velocity		= Vector2.zero;
 		_sp.sortingLayerName	= "UI";
 		_isThrown				= false;
@@ -50,7 +53,9 @@ public class Item : MonoBehaviour
 		_angle 					= angle;
 		forward 				= new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle));
 		transform.parent  		= null;
-		_collider.enabled 		= true;
+		for (int i = 0; i < _colliders.Length; i++) {
+			_colliders [i].enabled = true;
+		}
 		_rigidbody.velocity 	= Vector2.zero;
 		_rigidbody.isKinematic 	= false;
 		_rigidbody.AddForce(forward * force);
@@ -71,7 +76,9 @@ public class Item : MonoBehaviour
 				_rigidbody.velocity = Vector2.zero;
 				transform.DOMove(other.gameObject.transform.position + (other.gameObject.transform.localScale * 0.5f), 0.5f);
 				_rigidbody.velocity *= 0.5f;
-				_collider.enabled 	= false;
+				for (int i = 0; i < _colliders.Length; i++) {
+					_colliders [i].enabled = false;
+				};
 				Destroy(other.transform.parent.gameObject, 1f);
 			}
 		}
