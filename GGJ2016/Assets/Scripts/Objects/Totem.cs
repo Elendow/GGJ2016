@@ -64,12 +64,10 @@ public class Totem : MonoBehaviour {
 			else
 			{
 				BadItem();
-
 			}
 			CalculateScore();
 			other.gameObject.SetActive(false);	
-
-			TweenOrb.DORestart ();
+			TweenOrb.DORestart();
 		}
 	}
 
@@ -82,10 +80,13 @@ public class Totem : MonoBehaviour {
 				_missingItems.Add(i);
 		}
 
-		int _screwItem = _missingItems[Random.Range(0, _missingItems.Count)];
-		_recipe.itemsDone[_screwItem] = -1;
-		ingredientsBackground[_screwItem].color = Color.red;
-		ingredientsBackground [_screwItem].GetComponent<DOTweenAnimation> ().DORestart ();
+		if(_missingItems.Count > 0)
+		{
+			int _screwItem = _missingItems[Random.Range(0, _missingItems.Count)];
+			_recipe.itemsDone[_screwItem] = -1;
+			ingredientsBackground[_screwItem].color = Color.red;
+			ingredientsBackground[_screwItem].GetComponent<DOTweenAnimation>().DORestart();
+		}
 	}
 
 	private void CalculateScore()
