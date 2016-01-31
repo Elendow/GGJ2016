@@ -254,10 +254,14 @@ public class Player : MonoBehaviour {
 
 					_item.transform.DOScale (_item.transform.localScale * 1.5f, 0.2f).From ();
 
-					if(_item.IsThrown)
-					{
-						Vector2 forward = new Vector2(Mathf.Cos(_item.Angle), Mathf.Sin(_item.Angle));
+					if (_item.IsThrown) {
+						Vector2 forward = new Vector2 (Mathf.Cos (_item.Angle), Mathf.Sin (_item.Angle));
 						_force += forward * (speed + 4);
+					} else {
+
+
+						_recipeManager.UnlockSpawner (_item.spawnerOcupado);
+
 					}
 
 
