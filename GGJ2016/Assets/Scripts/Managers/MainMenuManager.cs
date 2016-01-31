@@ -2,11 +2,14 @@
 using System.Collections;
 using InControl;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class MainMenuManager : MonoBehaviour {
 
 	public GameObject[] playerTick;
 	public int maxPlayer = 2;
+
+	public DOTweenAnimation[] masks;
 
 	private InputDevice[] _controllers;
 
@@ -31,9 +34,9 @@ public class MainMenuManager : MonoBehaviour {
 			if(_controllers[i] != null)
 			{
 				if(_controllers[i].Action1.IsPressed)
-					playerTick[i].SetActive(true);
-				else if(_controllers[i].Action2.IsPressed)
-					playerTick[i].SetActive(false);
+					masks[i].DOPlay();
+				//else if(_controllers[i].Action2.IsPressed)
+					//playerTick[i].SetActive(false);
 				else if(_controllers[i].Action4.IsPressed)
 					SceneManager.LoadScene("Gameplay");
 			}
