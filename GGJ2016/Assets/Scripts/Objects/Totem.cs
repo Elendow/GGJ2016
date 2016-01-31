@@ -54,42 +54,44 @@ public class Totem : MonoBehaviour {
 		{
 			Item _i = other.transform.parent.GetComponent<Item>();
 
-			if(_recipe.itemsRecipe.Contains(_i.itemID))
+			if(_i.IsPickedUp)
 			{
-				int _index = -1;
-				for(int i = 0; i < _recipe.itemsRecipe.Count; i++)
+				if(_recipe.itemsRecipe.Contains(_i.itemID))
 				{
-					if(_recipe.itemsRecipe[i] == _i.itemID && _index == -1 && _recipe.itemsDone[i] == 0)
-						_index = i;
-				}
+					int _index = -1;
+					for(int i = 0; i < _recipe.itemsRecipe.Count; i++)
+					{
+						if(_recipe.itemsRecipe[i] == _i.itemID && _index == -1 && _recipe.itemsDone[i] == 0)
+							_index = i;
+					}
 
-				if(_index != -1)
-				{
-					_recipe.itemsDone[_index] = 1;
-					ingredientsBackground[_index].color = Color.green;
-					ingredientsBackground[_index].GetComponent<DOTweenAnimation> ().DORestart ();
-					_musicManager.playItemCorrecto ();
-					_ambientManager.CambiaAmbiente (playerNum);
+					if(_index != -1)
+					{
+						_recipe.itemsDone[_index] = 1;
+						ingredientsBackground[_index].color = Color.green;
+						ingredientsBackground[_index].GetComponent<DOTweenAnimation> ().DORestart ();
+						_musicManager.playItemCorrecto ();
+						_ambientManager.CambiaAmbiente (playerNum);
+					}
+					else
+					{
+						BadItem();
+					}
+					other.transform.parent.gameObject.SetActive(false);
 				}
 				else
 				{
 					BadItem();
 				}
+				CalculateScore();
 				other.transform.parent.gameObject.SetActive(false);
-			}
-			else
-			{
-				BadItem();
-			}
-			CalculateScore();
-			other.transform.parent.gameObject.SetActive(false);
-			TweenOrb.DORestart();
-			_shaker.Shake ();
+				TweenOrb.DORestart();
+				_shaker.Shake ();
 
-			if (!_recipe.itemsDone.Contains (0)) {
-				_gameOverManager.GameOver ();
+				if (!_recipe.itemsDone.Contains (0)) {
+					_gameOverManager.GameOver ();
+				}
 			}
-
 		}
 	}
 
