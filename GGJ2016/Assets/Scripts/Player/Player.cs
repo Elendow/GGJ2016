@@ -83,17 +83,20 @@ public class Player : MonoBehaviour {
 					//Push Player
 					else
 					{
-						#if UNITY_EDITOR
-						Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
-						#endif
-						RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
-						if (hit.collider != null) {
-							if(hit.collider.gameObject.CompareTag("Player"))
-							{
-								float distance = Vector2.Distance(transform.position, hit.point);
-								if(distance <= pushDistance)
+						if(_lastItem == null)
+						{
+							#if UNITY_EDITOR
+							Debug.DrawLine(transform.position, transform.position + (new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * pushDistance)); 
+							#endif
+							RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0));
+							if (hit.collider != null) {
+								if(hit.collider.gameObject.CompareTag("Player"))
 								{
-									hit.collider.gameObject.GetComponent<Player>().Push(distance, angle, true);
+									float distance = Vector2.Distance(transform.position, hit.point);
+									if(distance <= pushDistance)
+									{
+										hit.collider.gameObject.GetComponent<Player>().Push(distance, angle, true);
+									}
 								}
 							}
 						}
@@ -227,10 +230,20 @@ public class PlayerInput : PlayerActionSet
 			_up.AddDefaultBinding(InputControlType.LeftStickUp);
 			_down.AddDefaultBinding(InputControlType.LeftStickDown);
 
+			_left.AddDefaultBinding(InputControlType.DPadLeft);
+			_right.AddDefaultBinding(InputControlType.DPadRight);
+			_up.AddDefaultBinding(InputControlType.DPadUp);
+			_down.AddDefaultBinding(InputControlType.DPadDown);
+
 			_shootLeft.AddDefaultBinding(InputControlType.RightStickLeft);
 			_shootRight.AddDefaultBinding(InputControlType.RightStickRight);
 			_shootUp.AddDefaultBinding(InputControlType.RightStickUp);
 			_shootDown.AddDefaultBinding(InputControlType.RightStickDown);
+
+			_shootLeft.AddDefaultBinding(InputControlType.Action3);
+			_shootRight.AddDefaultBinding(InputControlType.Action2);
+			_shootUp.AddDefaultBinding(InputControlType.Action4);
+			_shootDown.AddDefaultBinding(InputControlType.Action1);
 		}
 		else
 		{

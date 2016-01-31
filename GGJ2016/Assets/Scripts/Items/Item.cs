@@ -24,6 +24,8 @@ public class Item : MonoBehaviour
 	{
 		if(Mathf.Abs(_rigidbody.velocity.x) < 0.1f && Mathf.Abs(_rigidbody.velocity.y) < 0.1f)
 			_isThrown = false;
+
+		Debug.Log(_isThrown, gameObject);
 	}
 
 	public void PickUp(Transform parent)
@@ -33,6 +35,7 @@ public class Item : MonoBehaviour
 		_collider.enabled 		= false;
 		_rigidbody.isKinematic 	= true;
 		_sp.sortingLayerName	= "UI";
+		_isThrown				= false;
 	}
 
 	public void Throw(float angle, float force)
@@ -43,6 +46,7 @@ public class Item : MonoBehaviour
 		forward 				= new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle));
 		transform.parent  		= null;
 		_collider.enabled 		= true;
+		_rigidbody.velocity 	= Vector2.zero;
 		_rigidbody.isKinematic 	= false;
 		_rigidbody.AddForce(forward * force);
 		_sp.sortingLayerName	= "Default";
