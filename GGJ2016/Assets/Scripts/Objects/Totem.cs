@@ -33,11 +33,17 @@ public class Totem : MonoBehaviour {
 		_recipeManager = GameObject.FindObjectOfType<RecipeManager>();
 		_ambientManager = GameObject.FindObjectOfType<AmbientManager>();
 		_gameOverManager = GameObject.FindObjectOfType<GameOverManager>();
+		//_gameOverManager.OnGameStart += Init;
 		_shaker = Camera.main.GetComponent<ProCamera2DShake> ();
 
 		if(_recipeManager == null)
 			Debug.LogError("Recipe Manager is Missing!");
 
+		Init ();
+	}
+
+	void Init ()
+	{
 		_recipe = _recipeManager.recipes[playerNum - 1];
 
 		for(int i = 0; i < _recipe.itemsRecipe.Count; i++)

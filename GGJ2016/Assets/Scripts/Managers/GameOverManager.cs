@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using DG.Tweening;
+using InControl;
+
+
 public class GameOverManager : MonoBehaviour {
 
 	public delegate void OnGameStartDelegate();
@@ -14,15 +17,28 @@ public class GameOverManager : MonoBehaviour {
 	public Text txtGameOver;
 	public Text txtCountdown;
 
+	private bool canRestart = false;
+
 	void Start(){
 		GameManager.Instance.isInGame = false;
 		GameStart ();
+	}
+
+	void Update(){
+		if (canRestart) {
+			if (InputManager.ActiveDevice.AnyButton) {
+				Application.LoadLevel ("Gameplay");
+
+			}
+		}
+
 	}
 
 
 	public void GameOver(){
 		GameManager.Instance.isInGame = false;
 		EvaluaPuntuaciones ();
+		canRestart = true;
 	}
 
 	public void GameStart(){
@@ -31,7 +47,7 @@ public class GameOverManager : MonoBehaviour {
 	}
 
 	IEnumerator RutinaStartGame(){
-
+		txtGameOver.gameObject.SetActive (false);
 		txtCountdown.text = "3";
 		txtCountdown.gameObject.SetActive (true);
 		yield return new WaitForSeconds (1);
@@ -49,6 +65,7 @@ public class GameOverManager : MonoBehaviour {
 
 		yield return new WaitForSeconds (1);
 		txtCountdown.gameObject.SetActive (false);
+		txtCountdown.DOFade (1f, 0f);
 		txtCountdown.rectTransform.localScale = prevScale;
 		GameManager.Instance.isInGame = true;
 

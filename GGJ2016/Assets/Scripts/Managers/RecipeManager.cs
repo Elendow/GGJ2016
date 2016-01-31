@@ -13,18 +13,19 @@ public class RecipeManager : MonoBehaviour {
 
 	void Start(){
 		GameOverManager goManager = FindObjectOfType<GameOverManager> ();
-		goManager.OnGameStart = HandleOnGameStartDelegate;
-		goManager.OnGameOver = HandleOnGameOverDelegate;
+		goManager.OnGameStart += IniciaRutina;
+	//	goManager.OnGameOver += HandleOnGameOverDelegate;
 	}
 
 	void HandleOnGameOverDelegate (int ganador)
 	{
-		
+		StopAllCoroutines ();
 	}
 
 	void HandleOnGameStartDelegate ()
 	{
 		timeStarted = Time.time;
+		Init ();
 	}
 
 	private void Awake() 
@@ -35,17 +36,25 @@ public class RecipeManager : MonoBehaviour {
 		for(int i = 0; i < 4; i++)
 			recipes.Add(new Recipe());
 
+		Init ();
+
+
+	}
+
+	private void Init (){
 		for(int i = 0; i < 4; i++)
 			recipes[i].Initialize();
-		
+
 		OrganizeRecipes();
 
 		//Comentar esto para activarlo cuando vengamos del menu
 		//GameManager.Instance.isInGame = true;
-
-		StartCoroutine(RoutineSpawn());
-
 	}
+
+	private void IniciaRutina(){
+		StartCoroutine(RoutineSpawn());
+	}
+
 
 	//Cada item lo tengan 3 de los personajes. a excepción del último asignado que lo asignaremos únicamente
 	private void OrganizeRecipes()
@@ -100,6 +109,7 @@ public class RecipeManager : MonoBehaviour {
 		//Coge los iniciales
 		List<Spawner> spawnerIniciales = spawners.FindAll(s => s.initialSpawner);
 		foreach (Spawner spawner in spawnerIniciales) {
+			Debug.Log ("LAL");
 			InstanciateItemInSpawner (allItems [Random.Range (0, allItems.Count)], spawner);
 		}
 	}

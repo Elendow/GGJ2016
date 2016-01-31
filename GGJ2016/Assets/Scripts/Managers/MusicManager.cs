@@ -35,8 +35,8 @@ public class MusicManager : MonoBehaviour {
 		_audioSource = GetComponent<AudioSource> ();
 
 		GameOverManager goManager = FindObjectOfType<GameOverManager> ();
-		goManager.OnGameStart = HandleOnGameStartDelegate;
-		goManager.OnGameOver = HandleOnGameOverDelegate;
+		goManager.OnGameStart += HandleOnGameStartDelegate;
+		goManager.OnGameOver += HandleOnGameOverDelegate;
 	}
 
 	void HandleOnGameOverDelegate (int ganador)
