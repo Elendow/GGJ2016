@@ -16,17 +16,6 @@ public class MusicManager : MonoBehaviour {
 
 	public float pitchVariation = 0.2f;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-
 	public void  playItemCorrecto() { PlaySound (clipItemCorrecto); }
 	public void  playItemIncorrecto() { PlaySound (clipItemIncorrecto); }
 	public void  playPickItem() { PlaySound (clipPickItem); }

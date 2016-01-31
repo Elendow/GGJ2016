@@ -26,27 +26,17 @@ public class Player : MonoBehaviour {
 	private Rigidbody2D _rigidbody;
 	private PlayerInput _playerInput;
 	private Collider2D _collider;
-<<<<<<< Updated upstream
 	private Animator _animator;
+	private MusicManager _musicManager;
 
 	void Awake() 
 	{
 		_rigidbody 	= GetComponent<Rigidbody2D>();
 		_collider 	= GetComponent<Collider2D>();
-		_initPos 	= transform.position;
 		_animator	= GetComponent<Animator> ();
-=======
-	private MusicManager _musicManager;
+		_initPos 	= transform.position;
 
-	void Awake() 
-	{
-		_musicManager = FindObjectOfType<MusicManager>();
-		_rigidbody 	  = GetComponent<Rigidbody2D>();
-		_collider 	  = GetComponent<Collider2D>();
-		_initPos 	  = transform.position;
->>>>>>> Stashed changes
-
-		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
+ 		if(GameManager.Instance.playerDevices.Count > playerNum - 1)
 		{
 			//Take the controller assigned on the menu
 			_playerInput 		= new PlayerInput(true);

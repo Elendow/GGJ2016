@@ -24,11 +24,6 @@ public class Item : MonoBehaviour
 	{
 		if(Mathf.Abs(_rigidbody.velocity.x) < 0.2f && Mathf.Abs(_rigidbody.velocity.y) < 0.2f)
 			_isThrown = false;
-<<<<<<< Updated upstream
-
-//		Debug.Log(_isThrown, gameObject);
-=======
->>>>>>> Stashed changes
 	}
 
 	public void PickUp(Transform parent)
