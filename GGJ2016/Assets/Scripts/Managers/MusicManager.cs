@@ -22,12 +22,12 @@ public class MusicManager : MonoBehaviour {
 
 	public void  playItemCorrecto() { PlaySound (clipItemCorrecto); }
 	public void  playItemIncorrecto() { PlaySound (clipItemIncorrecto); }
-	public void  playPickItem() { PlaySound (clipPickItem); }
+	public void  playPickItem() { PlaySound (clipPickItem, 0.6f); }
 	public void  playTiraItem() { PlaySound (clipTiraItem); }
-	public void  playEmpuja() { PlaySound (clipEmpuja); }
-	public void  playRecogeItem() { PlaySound (clipRecogeItem); }
-	public void  playCaeLavaItem() { PlaySound (clipCaeLavaItem); }
-	public void  playCaeLavaPJ() { PlaySound (clipCaeLavaPJ); }
+	public void  playEmpuja() { PlaySound (clipEmpuja, 1.2f); }
+	public void  playRecogeItem() { PlaySound (clipRecogeItem, 0.6f); }
+	public void  playCaeLavaItem() { PlaySound (clipCaeLavaItem, 1.2f); }
+	public void  playCaeLavaPJ() { PlaySound (clipCaeLavaPJ, 1.2f); }
 
 	private AudioSource _audioSource;
 
@@ -49,6 +49,19 @@ public class MusicManager : MonoBehaviour {
 		_audioSource.clip = clipBGGameplay;
 		_audioSource.Play ();
 		Debug.Log ("LEL");
+	}
+
+	public void PlaySound(AudioClip clip, float volume)
+	{
+		if (clip != null && soundPrefab != null) {
+
+			AudioSource aSource = GameObject.Instantiate (soundPrefab) as AudioSource;
+			aSource.clip = clip;
+			aSource.PlayOneShot (clip);
+			aSource.pitch += Random.Range (-pitchVariation, pitchVariation);
+			aSource.volume = volume;
+			Destroy (aSource.gameObject, clip.length + 0.5f);
+		}
 	}
 
 	/// <summary>

@@ -96,6 +96,7 @@ public class Player : MonoBehaviour {
 							_item.Throw(angle, throwForce);
 							_lastItem 	= _item;
 							_item 		= null;
+							_musicManager.playTiraItem();
 						}
 						//Push Player
 						else
@@ -204,6 +205,7 @@ public class Player : MonoBehaviour {
 		}
 		Vector2 forward = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)).normalized;
 		_force = forward * speed;
+		_musicManager.playEmpuja();
 	}
 
 	private void ReBounce(float angle)
