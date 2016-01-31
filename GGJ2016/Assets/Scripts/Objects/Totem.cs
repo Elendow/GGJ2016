@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class Totem : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class Totem : MonoBehaviour {
 	private int _score = 0;
 	private Recipe _recipe;
 	private RecipeManager _recipeManager;
+
+	public DOTweenAnimation TweenOrb;
 
 	private void Start()
 	{
@@ -50,6 +53,7 @@ public class Totem : MonoBehaviour {
 				{
 					_recipe.itemsDone[_index] = 1;
 					ingredientsBackground[_index].color = Color.green;
+					ingredientsBackground[_index].GetComponent<DOTweenAnimation> ().DORestart ();
 				}
 				else
 				{
@@ -64,6 +68,8 @@ public class Totem : MonoBehaviour {
 			}
 			CalculateScore();
 			other.gameObject.SetActive(false);	
+
+			TweenOrb.DORestart ();
 		}
 	}
 
@@ -79,6 +85,7 @@ public class Totem : MonoBehaviour {
 		int _screwItem = _missingItems[Random.Range(0, _missingItems.Count)];
 		_recipe.itemsDone[_screwItem] = -1;
 		ingredientsBackground[_screwItem].color = Color.red;
+		ingredientsBackground [_screwItem].GetComponent<DOTweenAnimation> ().DORestart ();
 	}
 
 	private void CalculateScore()
