@@ -48,6 +48,7 @@ public class MusicManager : MonoBehaviour {
 	{
 		_audioSource.clip = clipBGGameplay;
 		_audioSource.Play ();
+		Debug.Log ("LEL");
 	}
 
 	/// <summary>
