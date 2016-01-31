@@ -180,7 +180,7 @@ public class Player : MonoBehaviour {
 			Item _i = other.transform.parent.GetComponent<Item>();
 			if(!_i.IsPickedUp && _lastItem != _i)
 			{
-				if(_lastItem == null)
+				if(_item == null && (_i.IsThrown || _lastItem == null))
 				{
 					_lastItem 	= _item;
 					_item 		=  _i;
@@ -193,7 +193,7 @@ public class Player : MonoBehaviour {
 						_force += forward * (speed + 4);
 					}
 				}
-				else if(_lastItem != null && _item.IsThrown)
+				else if(_item != null && _i.IsThrown)
 				{
 					_lastItem 	= _item;
 					_item 		=  _i;
