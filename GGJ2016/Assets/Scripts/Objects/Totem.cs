@@ -14,6 +14,7 @@ public class Totem : MonoBehaviour {
 	private int _score = 0;
 	private Recipe _recipe;
 	private RecipeManager _recipeManager;
+	private AmbientManager _ambientManager;
 
 	public DOTweenAnimation TweenOrb;
 
@@ -23,6 +24,7 @@ public class Totem : MonoBehaviour {
 	{
 		_musicManager =	GameObject.FindObjectOfType<MusicManager> ();
 		_recipeManager = GameObject.FindObjectOfType<RecipeManager>();
+		_ambientManager = GameObject.FindObjectOfType<AmbientManager>();
 
 		if(_recipeManager == null)
 			Debug.LogError("Recipe Manager is Missing!");
@@ -58,6 +60,7 @@ public class Totem : MonoBehaviour {
 					ingredientsBackground[_index].color = Color.green;
 					ingredientsBackground[_index].GetComponent<DOTweenAnimation> ().DORestart ();
 					_musicManager.playItemCorrecto ();
+					_ambientManager.CambiaAmbiente (playerNum);
 				}
 				else
 				{
