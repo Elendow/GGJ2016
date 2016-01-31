@@ -3,8 +3,12 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Com.LuisPedroFonseca.ProCamera2D;
+
 
 public class Totem : MonoBehaviour {
+
+
 
 	public int playerNum;
 	public Image[] ingredientsBackground;
@@ -21,6 +25,7 @@ public class Totem : MonoBehaviour {
 	MusicManager _musicManager;
 
 	GameOverManager _gameOverManager;
+	ProCamera2DShake _shaker;
 
 	private void Start()
 	{
@@ -28,6 +33,7 @@ public class Totem : MonoBehaviour {
 		_recipeManager = GameObject.FindObjectOfType<RecipeManager>();
 		_ambientManager = GameObject.FindObjectOfType<AmbientManager>();
 		_gameOverManager = GameObject.FindObjectOfType<GameOverManager>();
+		_shaker = Camera.main.GetComponent<ProCamera2DShake> ();
 
 		if(_recipeManager == null)
 			Debug.LogError("Recipe Manager is Missing!");
@@ -78,6 +84,7 @@ public class Totem : MonoBehaviour {
 			CalculateScore();
 			other.transform.parent.gameObject.SetActive(false);
 			TweenOrb.DORestart();
+			_shaker.Shake ();
 
 			if (!_recipe.itemsDone.Contains (0)) {
 				_gameOverManager.GameOver ();
@@ -104,6 +111,8 @@ public class Totem : MonoBehaviour {
 		}
 
 		_musicManager.playItemIncorrecto ();
+
+
 	}
 
 	private void CalculateScore()
